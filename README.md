@@ -8,6 +8,12 @@ A Nova tool to manage menus.
 composer require novius/laravel-nova-menu
 ```
 
+Then, launch migrations 
+
+```sh
+php artisan migrate
+```
+
 ### Configuration
 
 Some options that you can override are available.
