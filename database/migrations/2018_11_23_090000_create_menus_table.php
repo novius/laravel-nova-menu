@@ -48,7 +48,7 @@ class CreateMenusTable extends Migration
      */
     public function down()
     {
-        Schema::drop('nova_menus');
         Schema::drop('nova_menu_items');
+        Schema::drop('nova_menus');
     }
 }
