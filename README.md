@@ -1,4 +1,7 @@
 # Nova menu manager
+[![Travis](https://img.shields.io/travis/novius/laravel-nova-menu.svg?maxAge=1800&style=flat-square)](https://travis-ci.org/novius/laravel-nova-menu)
+[![Packagist Release](https://img.shields.io/packagist/v/novius/laravel-nova-menu.svg?maxAge=1800&style=flat-square)](https://packagist.org/packages/novius/laravel-nova-menu)
+[![Licence](https://img.shields.io/packagist/l/novius/laravel-nova-menu.svg?maxAge=1800&style=flat-square)](https://github.com/novius/laravel-nova-menu#licence)
 
 A Nova tool to manage menus.
 
