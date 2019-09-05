@@ -76,7 +76,7 @@ return [
 Then, you have to implements `Linkable` trait to the model.
 
 ```php
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Novius\LaravelNovaMenu\Traits\Linkable;
