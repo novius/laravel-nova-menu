@@ -15,10 +15,11 @@
     }
   ],
   "require": {
-    "php": ">=7.1.0",
+    "php": "^7.2",
     "benjaminhirsch/nova-slug-field": "^1.2",
-    "cviebrock/eloquent-sluggable": "^4.6.0",
-    "novius/laravel-nova-order-nestedset-field": "^0.2.0@alpha"
+    "cviebrock/eloquent-sluggable": "^6.0.2",
+    "illuminate/support": "^6.0",
+    "novius/laravel-nova-order-nestedset-field": "^0.3.0@alpha"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "~2.15.0"

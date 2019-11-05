@@ -5,6 +5,16 @@
 
 A Nova tool to manage menus.
 
+## Requirements
+
+* PHP >= 7.2
+* Laravel Nova >= 2.0
+* Laravel Framework >= 6.0
+
+> **NOTE**: These instructions are for Laravel 6.0. If you are using Laravel 5.8, please
+> see the [previous version's docs](https://github.com/novius/laravel-nova-menu/tree/v0.1.1-alpha).
+
+
 ## Installation
 
 ```sh
@@ -25,7 +35,7 @@ Some options that you can override are available.
 php artisan vendor:publish --provider="Novius\LaravelNovaMenu\LaravelNovaMenuServiceProvider" --tag="config"
 ```
 
-## Edit default config and templates
+## Edit default templates
 
 Run:
 
