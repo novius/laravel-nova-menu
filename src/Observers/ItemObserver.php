@@ -3,17 +3,17 @@
 namespace Novius\LaravelNovaMenu\Observers;
 
 use Illuminate\Support\Facades\Cache;
-use Novius\LaravelNovaMenu\Models\Item;
+use Novius\LaravelNovaMenu\Models\MenuItem;
 
 class ItemObserver
 {
     /**
-     * @param Item $item
+     * @param MenuItem $item
      */
-    public function created(Item $item)
+    public function created(MenuItem $item)
     {
         Cache::forget($item->menu->getTreeCacheName());
-        Cache::forget(Item::getDepthCacheName($item->id));
+        Cache::forget(MenuItem::getDepthCacheName($item->id));
 
         if (config('nova-order-nestedset-field.cache_enabled', false)) {
             $item->clearOrderableCache();
@@ -21,12 +21,12 @@ class ItemObserver
     }
 
     /**
-     * @param Item $item
+     * @param MenuItem $item
      */
-    public function updated(Item $item)
+    public function updated(MenuItem $item)
     {
         Cache::forget($item->menu->getTreeCacheName());
-        Cache::forget(Item::getDepthCacheName($item->id));
+        Cache::forget(MenuItem::getDepthCacheName($item->id));
 
         if (config('nova-order-nestedset-field.cache_enabled', false)) {
             $item->clearOrderableCache();
@@ -34,12 +34,12 @@ class ItemObserver
     }
 
     /**
-     * @param Item $item
+     * @param MenuItem $item
      */
-    public function deleted(Item $item)
+    public function deleted(MenuItem $item)
     {
         Cache::forget($item->menu->getTreeCacheName());
-        Cache::forget(Item::getDepthCacheName($item->id));
+        Cache::forget(MenuItem::getDepthCacheName($item->id));
 
         if (config('nova-order-nestedset-field.cache_enabled', false)) {
             $item->clearOrderableCache();

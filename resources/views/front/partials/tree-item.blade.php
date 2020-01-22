@@ -1,5 +1,5 @@
-<li data-depth="{{ $tree['infos']['depth'] }}">
-    <a href="{{ $tree['infos']['href'] }}">
+<li data-depth="{{ $tree['infos']['depth'] }}" class="{{ !empty($tree['children']) ? 'has-sub-menu' : '' }}">
+    <a href="{{ $tree['infos']['href'] }}" class="{{ $tree['infos']['htmlClasses'] }}">
         {{ $tree['infos']['name'] }}
     </a>
     @if (!empty($tree['children']))

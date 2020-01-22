@@ -6,14 +6,14 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use Novius\LaravelNovaMenu\Models\Item;
 use Novius\LaravelNovaMenu\Models\Menu;
+use Novius\LaravelNovaMenu\Models\MenuItem;
 
 class MenuHelper
 {
     /**
      * Returns a sorted array of linkable items and routes.
-     * This collection is used in the back office (backpack) to feed a select list.
+     * This collection is used in the back office to feed a select list.
      * This select list is intended for adding new menu items.
      *
      * @return array
@@ -75,7 +75,7 @@ class MenuHelper
         }
 
         $tree = Cache::rememberForever($menu->getTreeCacheName(), function () use ($menu) {
-            $items = Item::scoped(['menu_id' => $menu->id])
+            $items = MenuItem::scoped(['menu_id' => $menu->id])
                 ->withDepth()
                 ->defaultOrder()
                 ->get()
@@ -90,7 +90,11 @@ class MenuHelper
         ]);
     }
 
-    protected static function getTree(Collection $items)
+    /**
+     * @param Collection $items
+     * @return array
+     */
+    protected static function getTree(Collection $items): array
     {
         $tree = [];
         foreach ($items as $key => $menuItem) {
@@ -99,6 +103,7 @@ class MenuHelper
                     'name' => $menuItem->name,
                     'href' => $menuItem->href(),
                     'depth' => $menuItem->depth,
+                    'htmlClasses' => $menuItem->html_classes,
                 ],
                 'children' => ($menuItem->children->count() ? static::getTree($menuItem->children) : []),
             ];

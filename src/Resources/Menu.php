@@ -3,12 +3,12 @@
 namespace Novius\LaravelNovaMenu\Resources;
 
 use App\Nova\Resource;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\ID;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
 
 class Menu extends Resource
 {
@@ -49,19 +49,21 @@ class Menu extends Resource
         return [
             ID::make()->sortable(),
 
-            TextWithSlug::make('Name')
+            TextWithSlug::make(trans('laravel-nova-menu::menu.menu_name'), 'name')
                 ->slug('slug')
-                ->sortable(),
+                ->sortable()
+                ->rules('required', 'max:255'),
 
-            Slug::make('Slug'),
+            Slug::make(trans('laravel-nova-menu::menu.slug'), 'slug')
+                ->rules('required', 'regex:/^[0-9a-z\-_]+$/i'),
 
-            Text::make('Blade directive', function () {
+            Text::make(trans('laravel-nova-menu::menu.blade_directive'), function () {
                 return sprintf('<code class="p-2 bg-30 text-sm text-success">@menu("%s")</code>', $this->slug);
             })
-            ->asHtml()
-            ->onlyOnIndex(),
+                ->asHtml()
+                ->onlyOnIndex(),
 
-            HasMany::make('Items', 'items', Item::class),
+            HasMany::make(trans('laravel-nova-menu::menu.menu_items'), 'items', MenuItem::class),
         ];
     }
 

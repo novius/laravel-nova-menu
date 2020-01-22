@@ -13,17 +13,18 @@ class Menu extends Model
     use Sluggable;
 
     protected $table = 'nova_menus';
+
     protected $primaryKey = 'id';
-    protected $fillable = [
-        'name',
-        'slug',
+
+    protected $guarded = [
+        'id',
     ];
 
     public $timestamps = true;
 
     public function items()
     {
-        return $this->hasMany(Item::class);
+        return $this->hasMany(MenuItem::class);
     }
 
     /**
