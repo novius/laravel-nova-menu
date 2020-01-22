@@ -8,7 +8,11 @@ use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
 
-class Item extends Model
+/**
+ * Class MenuItem
+ * @package Novius\LaravelNovaMenu\Models
+ */
+class MenuItem extends Model
 {
     use NodeTrait {
         setParentIdAttribute as public nodeTraitSetParentIdAttribute;
@@ -16,12 +20,11 @@ class Item extends Model
     use Orderable;
 
     protected $table = 'nova_menu_items';
+
     protected $primaryKey = 'id';
-    protected $fillable = [
-        'name',
-        'menu_id',
-        'external_link',
-        'internal_link',
+
+    protected $guarded = [
+        'id',
     ];
 
     public $timestamps = true;

@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
 use Novius\LaravelNovaMenu\Observers\ItemObserver;
-use Novius\LaravelNovaMenu\Resources\Item;
+use Novius\LaravelNovaMenu\Resources\MenuItem;
 use Novius\LaravelNovaMenu\Resources\Menu;
 
 class LaravelNovaMenuServiceProvider extends ServiceProvider
@@ -25,7 +25,7 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
 
             Nova::resources([
                 Menu::class,
-                Item::class,
+                MenuItem::class,
             ]);
         });
 
@@ -51,7 +51,7 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
             return "<?php echo Novius\LaravelNovaMenu\Helpers\MenuHelper::displayMenu($expression) ?>";
         });
 
-        \Novius\LaravelNovaMenu\Models\Item::observe(ItemObserver::class);
+        \Novius\LaravelNovaMenu\Models\MenuItem::observe(ItemObserver::class);
     }
 
     /**

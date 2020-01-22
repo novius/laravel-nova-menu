@@ -16,14 +16,14 @@ use Novius\LaravelNovaMenu\Lenses\MenuItems;
 use Novius\LaravelNovaMenu\Tools\BackToMenu;
 use Novius\LaravelNovaOrderNestedsetField\OrderNestedsetField;
 
-class Item extends Resource
+class MenuItem extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \Novius\LaravelNovaMenu\Models\Item::class;
+    public static $model = \Novius\LaravelNovaMenu\Models\MenuItem::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -91,11 +91,11 @@ class Item extends Resource
         return [
             ID::make(),
 
-            Text::make('Name', function () use ($request) {
+            Text::make(trans('laravel-nova-menu::menu.name'), function () use ($request) {
                 $resource = $this->resource;
 
-                $depth = Cache::rememberForever(\Novius\LaravelNovaMenu\Models\Item::getDepthCacheName($resource->id), function () use ($resource) {
-                    $result = \Novius\LaravelNovaMenu\Models\Item::scoped([
+                $depth = Cache::rememberForever(\Novius\LaravelNovaMenu\Models\MenuItem::getDepthCacheName($resource->id), function () use ($resource) {
+                    $result = \Novius\LaravelNovaMenu\Models\MenuItem::scoped([
                         'menu_id' => $resource->menu_id,
                     ])->withDepth()->find($resource->id);
 
@@ -117,7 +117,7 @@ class Item extends Resource
                 ->hideWhenUpdating()
                 ->hideFromDetail(),
 
-            Text::make('Name')
+            Text::make(trans('laravel-nova-menu::menu.name'), 'name')
                 ->hideFromIndex()
                 ->rules('required', 'max:191'),
 
@@ -139,11 +139,16 @@ class Item extends Resource
                 ->hideFromIndex()
                 ->hideFromDetail(),
 
-            Select::make('Internal link', 'internal_link')
+            Select::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
                 ->options(MenuHelper::links())
                 ->rules('nullable', 'required_without:external_link', 'in:'.implode(',', array_keys(MenuHelper::links())))
                 ->hideFromIndex()
                 ->hideFromDetail(),
+
+            Text::make(trans('laravel-nova-menu::menu.html_classes'), 'html_classes')
+                ->rules('nullable', 'max:255', 'regex:/^[0-9a-z\- _]+$/i')
+                ->help(trans('laravel-nova-menu::menu.html_classes_help'))
+                ->hideFromIndex(),
 
             Text::make(trans('laravel-nova-menu::menu.url'), function () use ($request) {
                 $url = $this->resource->href();
@@ -153,7 +158,7 @@ class Item extends Resource
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
 
-            OrderNestedsetField::make('Order'),
+            OrderNestedsetField::make(trans('laravel-nova-menu::menu.order'), 'order'),
 
             BackToMenu::make()->test()->withMeta([
                 'menu_id' => $this->resource->menu_id,
