@@ -26,4 +26,20 @@ return [
      * "page.contact" will be the parameter of the laravel function trans().
      */
     'linkable_routes' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Locales
+    |--------------------------------------------------------------------------
+    |
+    | Set all the available locales as [key => name] pairs.
+    |
+    | For example ['en' => 'English'].
+    |
+    */
+
+    'locales' => [
+        'en' => 'English',
+        'fr' => 'Français',
+    ],
 ];

@@ -6,9 +6,12 @@ use App\Nova\Resource;
 use Benjaminhirsch\NovaSlugField\Slug;
 use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Novius\LaravelNovaMenu\Filters\Locale;
 
 class Menu extends Resource
 {
@@ -49,6 +52,10 @@ class Menu extends Resource
         return [
             ID::make()->sortable(),
 
+            Select::make(trans('laravel-nova-menu::menu.locale'), 'locale')
+                ->options(config('laravel-nova-menu.locales', ['en' => 'English']))
+                ->required(),
+
             TextWithSlug::make(trans('laravel-nova-menu::menu.menu_name'), 'name')
                 ->slug('slug')
                 ->sortable()
@@ -86,7 +93,9 @@ class Menu extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new Locale(),
+        ];
     }
 
     /**
