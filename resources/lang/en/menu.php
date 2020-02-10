@@ -16,5 +16,5 @@ return [
     'html_classes_help' => 'HTML classes for link element.',
     'order' => 'Position',
     'name' => 'Name',
-    'target_blank' => 'Target blank ?',
+    'target_blank' => 'Open in a new tab ?',
 ];
