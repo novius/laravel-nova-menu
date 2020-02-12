@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Laravel\Nova\Fields\Boolean;
 use KossShtukert\LaravelNovaSelect2\Select2;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
@@ -164,6 +165,9 @@ class MenuItem extends Resource
             })->asHtml()
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
+
+            Boolean::make(trans('laravel-nova-menu::menu.target_blank'), 'target_blank')
+                ->hideFromIndex(),
 
             OrderNestedsetField::make(trans('laravel-nova-menu::menu.order'), 'order'),
 
