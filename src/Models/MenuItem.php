@@ -29,6 +29,10 @@ class MenuItem extends Model
 
     public $timestamps = true;
 
+    protected $casts = [
+        'target_blank' => 'boolean',
+    ];
+
     public function menu()
     {
         return $this->belongsTo(Menu::class);

@@ -17,4 +17,5 @@ return [
     'order' => 'Position',
     'name' => 'Name',
     'locale' => 'Locale',
+    'target_blank' => 'Open in a new tab ?',
 ];

@@ -17,4 +17,5 @@ return [
     'order' => 'Ordre',
     'name' => 'Nom',
     'locale' => 'Locale',
+    'target_blank' => 'Ouvrir dans un nouvel onglet ?',
 ];
