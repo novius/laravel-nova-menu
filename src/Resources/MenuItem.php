@@ -147,6 +147,7 @@ class MenuItem extends Resource
                     'width' => '100%',
                     'allowClear' => true,
                     'multiple' => false,
+                    'minimumResultsForSearch' => config('laravel-nova-menu.select2_minimumResultsForSearch', 5),
                 ])
                 ->hideFromIndex()
                 ->hideFromDetail(),
