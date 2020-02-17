@@ -14,7 +14,7 @@ class AlterMenuAddContext extends Migration
     public function up()
     {
         Schema::table('nova_menus', function (Blueprint $table) {
-            $table->string('locale', 2)->default('en');
+            $table->string('locale', 6)->default('en');
         });
     }
 

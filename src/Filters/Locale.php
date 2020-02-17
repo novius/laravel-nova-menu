@@ -3,6 +3,7 @@
 namespace Novius\LaravelNovaMenu\Filters;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Laravel\Nova\Filters\Filter;
 
 class Locale extends Filter
@@ -35,6 +36,6 @@ class Locale extends Filter
      */
     public function options(Request $request)
     {
-        return array_flip(config('laravel-nova-menu.locales', ['en' => 'English']));
+        return array_flip(Arr::sort(config('laravel-nova-menu.locales', ['en' => 'English'])));
     }
 }

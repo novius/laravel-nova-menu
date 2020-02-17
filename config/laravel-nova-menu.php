@@ -40,6 +40,6 @@ return [
 
     'locales' => [
         'en' => 'English',
-        'fr' => 'Français',
+        //'fr' => 'Français',
     ],
 ];
