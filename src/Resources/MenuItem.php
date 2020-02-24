@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use KossShtukert\LaravelNovaSelect2\Select2;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
@@ -131,7 +132,7 @@ class MenuItem extends Resource
             Text::make(trans('laravel-nova-menu::menu.external_link'), 'external_link')
                 ->help(trans('laravel-nova-menu::menu.must_start_with_http'))
                 ->nullable()
-                ->rules('max:191', function ($attribute, $value, $fail) {
+                ->rules('max:191', 'required_without:internal_link', function ($attribute, $value, $fail) {
                     if (!empty($value) && !Validator::make([$attribute => $value], [$attribute => 'url'])->passes()) {
                         return $fail(trans('laravel-nova-menu::errors.bad_format_external_link'));
                     }
@@ -139,9 +140,15 @@ class MenuItem extends Resource
                 ->hideFromIndex()
                 ->hideFromDetail(),
 
-            Select::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
+            Select2::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
                 ->options(MenuHelper::links())
                 ->rules('nullable', 'required_without:external_link', 'in:'.implode(',', array_keys(MenuHelper::links())))
+                ->configuration([
+                    'width' => '100%',
+                    'allowClear' => true,
+                    'multiple' => false,
+                    'minimumResultsForSearch' => config('laravel-nova-menu.select2_minimumResultsForSearch', 5),
+                ])
                 ->hideFromIndex()
                 ->hideFromDetail(),
 

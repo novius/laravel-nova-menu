@@ -26,4 +26,13 @@ return [
      * "page.contact" will be the parameter of the laravel function trans().
      */
     'linkable_routes' => [],
+
+    /*
+     * Internal links use select2
+     *
+     * This config refers to the select2 api options
+     * minimumResultsForSearch : The minimum number of results required to display the search box.
+     * https://select2.org/configuration/options-api
+     */
+    'select2_minimumResultsForSearch' => 5,
 ];
