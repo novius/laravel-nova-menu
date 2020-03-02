@@ -48,7 +48,15 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
         $this->publishes([__DIR__.'/../resources/lang' => resource_path('lang/vendor/laravel-nova-menu')], 'lang');
 
         Blade::directive('menu', function ($expression) {
-            return "<?php echo Novius\LaravelNovaMenu\Helpers\MenuHelper::displayMenu($expression) ?>";
+            $expression = trim($expression, '\'"');
+            $args = explode('|', $expression, 2);
+            $localeFallback = 'true';
+            if (isset($args[1]) && $args[1] === 'no-locale-fallback') {
+                $localeFallback = 'false';
+            }
+            $expression = '"'.array_shift($args).'"'; // reformat the slug with quotes
+
+            return "<?php echo Novius\LaravelNovaMenu\Helpers\MenuHelper::displayMenu($expression, $localeFallback) ?>";
         });
 
         \Novius\LaravelNovaMenu\Models\MenuItem::observe(ItemObserver::class);

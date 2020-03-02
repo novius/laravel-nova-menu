@@ -50,4 +50,9 @@ return [
         'en' => 'English',
         //'fr' => 'Français',
     ],
+
+    /**
+     * The max number of locales shown on resource index
+     */
+    'max_locales_on_index' => 4,
 ];

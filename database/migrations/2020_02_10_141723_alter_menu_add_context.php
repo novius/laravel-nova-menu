@@ -15,6 +15,7 @@ class AlterMenuAddContext extends Migration
     {
         Schema::table('nova_menus', function (Blueprint $table) {
             $table->string('locale', 6)->default('en');
+            $table->unsignedInteger('locale_parent_id')->nullable();
         });
     }
 
@@ -26,7 +27,7 @@ class AlterMenuAddContext extends Migration
     public function down()
     {
         Schema::table('nova_menus', function (Blueprint $table) {
-            $table->dropColumn('locale');
+            $table->dropColumn(['locale', 'locale_parent_id']);
         });
     }
 }

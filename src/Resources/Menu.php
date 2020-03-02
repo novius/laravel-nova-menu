@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use OptimistDigital\NovaLocaleField\LocaleField;
 use Novius\LaravelNovaMenu\Filters\Locale;
 
 class Menu extends Resource
@@ -58,6 +59,10 @@ class Menu extends Resource
             Slug::make(trans('laravel-nova-menu::menu.slug'), 'slug')
                 ->rules('required', 'regex:/^[0-9a-z\-_]+$/i'),
 
+            LocaleField::make('Locale', 'locale', 'locale_parent_id')
+                ->locales(config('laravel-nova-menu.locales', ['en' => 'English']))
+                ->maxLocalesOnIndex(config('laravel-nova-menu.max_locales_on_index', 4)),
+
             Text::make(trans('laravel-nova-menu::menu.blade_directive'), function () {
                 return sprintf('<code class="p-2 bg-30 text-sm text-success">@menu("%s")</code>', $this->slug);
             })
@@ -89,7 +94,7 @@ class Menu extends Resource
     {
         $locales = config('laravel-nova-menu.locales', ['en' => 'English']);
 
-        return (is_array($locales) && count($locales) > 1) ? [new Locale(),] : [];
+        return (is_array($locales) && count($locales) > 1) ? [new Locale()] : [];
     }
 
     /**
