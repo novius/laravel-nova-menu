@@ -35,4 +35,19 @@ return [
      * https://select2.org/configuration/options-api
      */
     'select2_minimumResultsForSearch' => 5,
+
+    /*
+     |--------------------------------------------------------------------------
+     | Locales
+     |--------------------------------------------------------------------------
+     |
+     | Set all the available locales as [locale => name] pairs.
+     |
+     | For example ['en' => 'English'].
+     |
+     */
+    'locales' => [
+        'en' => 'English',
+        //'fr' => 'Français',
+    ],
 ];

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Novius\LaravelNovaMenu\Filters\Locale;
 
 class Menu extends Resource
 {
@@ -86,7 +87,9 @@ class Menu extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        $locales = config('laravel-nova-menu.locales', ['en' => 'English']);
+
+        return (is_array($locales) && count($locales) > 1) ? [new Locale(),] : [];
     }
 
     /**

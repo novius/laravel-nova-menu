@@ -53,6 +53,14 @@ You can display menu with :
 @menu("slug-of-menu")
 ```
 
+By default a fallback to app() current locale is activated. 
+
+If you want force a specific slug with no fallback you can call :
+
+```blade
+@menu("slug-of-menu")
+```
+
 ### Override views
 
 You can override views with :
