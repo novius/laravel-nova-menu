@@ -35,4 +35,24 @@ return [
      * https://select2.org/configuration/options-api
      */
     'select2_minimumResultsForSearch' => 5,
+
+    /*
+     |--------------------------------------------------------------------------
+     | Locales
+     |--------------------------------------------------------------------------
+     |
+     | Set all the available locales as [locale => name] pairs.
+     |
+     | For example ['en' => 'English'].
+     |
+     */
+    'locales' => [
+        'en' => 'English',
+        //'fr' => 'Français',
+    ],
+
+    /**
+     * The max number of locales shown on resource index
+     */
+    'max_locales_on_index' => 4,
 ];

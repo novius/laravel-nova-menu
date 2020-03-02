@@ -62,14 +62,35 @@ class MenuHelper
      * @param $slug
      * @return string
      */
-    public static function displayMenu($slug): string
+    public static function displayMenu(string $slug, $localeFallback = true): string
     {
+        $locale = app()->getLocale();
         $menu = Menu::query()
             ->where('slug', (string) $slug)
             ->first();
 
+        if ($localeFallback && !empty($menu) && $menu->locale !== $locale) {
+            if (empty($menu->locale_parent_id)) {
+                $menu = Menu::query()
+                    ->where('locale_parent_id', $menu->id)
+                    ->where('locale', (string) $locale)
+                    ->first();
+            } else {
+                $menu = Menu::query()
+                    ->where(function ($query) use ($menu, $locale) {
+                        $query->where('id', $menu->locale_parent_id)
+                            ->where('locale', (string) $locale);
+                    })
+                    ->orWhere(function ($query) use ($menu, $locale) {
+                        $query->where('locale_parent_id', $menu->locale_parent_id)
+                            ->where('locale', (string) $locale);
+                    })
+                    ->first();
+            }
+        }
+
         if (empty($menu)) {
-            Log::info(sprintf('Menu with slug %s not found : unable to display.', (string) $slug));
+            Log::info(sprintf('Menu with slug %s and locale %s not found : unable to display.', (string) $slug, app()->getLocale()));
 
             return '';
         }

@@ -16,4 +16,5 @@ return [
     'html_classes_help' => 'Classes HTML ajoutées sur le lien.',
     'order' => 'Ordre',
     'name' => 'Nom',
+    'locale' => 'Locale',
 ];

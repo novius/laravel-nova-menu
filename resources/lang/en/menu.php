@@ -16,4 +16,5 @@ return [
     'html_classes_help' => 'HTML classes for link element.',
     'order' => 'Position',
     'name' => 'Name',
+    'locale' => 'Locale',
 ];
