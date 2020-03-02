@@ -19,8 +19,9 @@
     "benjaminhirsch/nova-slug-field": "^1.2",
     "cviebrock/eloquent-sluggable": "^6.0.2",
     "illuminate/support": "^6.0",
+    "koss-shtukert/laravel-nova-select2-auto-complete": "^1.20",
     "novius/laravel-nova-order-nestedset-field": "^0.3.0@alpha",
-    "koss-shtukert/laravel-nova-select2-auto-complete": "^1.20"
+    "optimistdigital/nova-locale-field": "^2.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "~2.15.0"
