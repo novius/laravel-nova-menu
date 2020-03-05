@@ -18,4 +18,6 @@ return [
     'name' => 'Nom',
     'locale' => 'Locale',
     'target_blank' => 'Ouvrir dans un nouvel onglet ?',
+    'html' => 'HTML',
+    'help_code' => 'Si vous remplissez cette partie vous ne pouvez pas choisir de liens',
 ];

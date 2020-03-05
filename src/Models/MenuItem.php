@@ -78,6 +78,11 @@ class MenuItem extends Model
     public function href(): string
     {
         $href = '#';
+
+        if (!empty($this->html)) {
+            return $href;
+        }
+
         if (!empty($this->external_link)) {
             $href = $this->external_link;
         }
