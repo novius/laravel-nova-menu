@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Laravel\Nova\Fields\Boolean;
 use KossShtukert\LaravelNovaSelect2\Select2;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
