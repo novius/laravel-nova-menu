@@ -18,4 +18,6 @@ return [
     'name' => 'Name',
     'locale' => 'Locale',
     'target_blank' => 'Open in a new tab ?',
+    'html' => 'HTML',
+    'help_code' => 'If you fill this area you can\'t choose a link',
 ];

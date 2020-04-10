@@ -55,4 +55,9 @@ return [
      * The max number of locales shown on resource index
      */
     'max_locales_on_index' => 4,
+
+    /*
+     * The max number of html's characters in menu field
+     */
+    'menu_item_html_max_size' => 100,
 ];

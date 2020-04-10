@@ -126,6 +126,7 @@ class MenuHelper
                     'depth' => $menuItem->depth,
                     'htmlClasses' => $menuItem->html_classes,
                     'targetBlank' => (bool) $menuItem->target_blank,
+                    'html' => $menuItem->html,
                 ],
                 'children' => ($menuItem->children->count() ? static::getTree($menuItem->children) : []),
             ];
