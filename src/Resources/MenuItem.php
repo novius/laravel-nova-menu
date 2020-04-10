@@ -202,9 +202,6 @@ class MenuItem extends Resource
             Boolean::make(trans('laravel-nova-menu::menu.target_blank'), 'target_blank')
                 ->hideFromIndex(),
 
-            Boolean::make(trans('laravel-nova-menu::menu.target_blank'), 'target_blank')
-                ->hideFromIndex(),
-
             OrderNestedsetField::make(trans('laravel-nova-menu::menu.order'), 'order'),
 
             BackToMenu::make()->test()->withMeta([
