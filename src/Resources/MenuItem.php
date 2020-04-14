@@ -3,6 +3,7 @@
 namespace Novius\LaravelNovaMenu\Resources;
 
 use App\Nova\Resource;
+use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -131,35 +132,48 @@ class MenuItem extends Resource
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
-            Text::make(trans('laravel-nova-menu::menu.external_link'), 'external_link')
-                ->help(trans('laravel-nova-menu::menu.must_start_with_http'))
-                ->nullable()
-                ->rules('max:191', 'required_without_all:internal_link,html', function ($attribute, $value, $fail) {
-                    if (!empty($value) && !Validator::make([$attribute => $value], [$attribute => 'url'])->passes()) {
-                        return $fail(trans('laravel-nova-menu::errors.bad_format_external_link'));
-                    }
-                })
-                ->hideFromDetail(),
+            Select::make('Type de lien', 'link_type')
+                ->options(\Novius\LaravelNovaMenu\Models\MenuItem::linkTypesLabels())
+                ->withMeta($this->metasDefaultLinkType())
+                ->displayUsingLabels()
+                ->rules('required'),
 
-            Select2::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
-                ->options(MenuHelper::links())
-                ->rules('nullable', 'required_without_all:external_link,html', 'in:'.implode(',', array_keys(MenuHelper::links())))
-                ->configuration([
-                    'width' => '100%',
-                    'allowClear' => true,
-                    'multiple' => false,
-                    'minimumResultsForSearch' => config('laravel-nova-menu.select2_minimumResultsForSearch', 5),
-                ])
-                ->hideFromIndex()
-                ->hideFromDetail(),
+            NovaDependencyContainer::make([
+                Select2::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
+                    ->options(MenuHelper::links())
+                    ->rules('nullable', 'required_without_all:external_link,html', 'in:'.implode(',', array_keys(MenuHelper::links())))
+                    ->configuration([
+                        'placeholder' => trans('laravel-nova-menu::menu.choose_internal_link'),
+                        'width' => '100%',
+                        'allowClear' => true,
+                        'multiple' => false,
+                        'minimumResultsForSearch' => config('laravel-nova-menu.select2_minimumResultsForSearch', 5),
+                    ])
+                    ->hideFromIndex()
+                    ->hideFromDetail(),
+            ])->dependsOn('link_type', \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_INTERNAL_LINK),
 
-            Code::make(trans('laravel-nova-menu::menu.html'), 'html')
-                ->help(trans('laravel-nova-menu::menu.help_code'))
-                ->rules('required_without_all:internal_link,external_link', 'max:'.config('laravel-nova-menu.menu_item_html_max_size'))
-                ->hideFromDetail(function ($ressource, $fields) {
-                    return empty($fields->html);
-                })
-                ->hideFromIndex(),
+            NovaDependencyContainer::make([
+                Text::make(trans('laravel-nova-menu::menu.external_link'), 'external_link')
+                    ->help(trans('laravel-nova-menu::menu.must_start_with_http'))
+                    ->nullable()
+                    ->rules('max:191', 'required_without_all:internal_link,html', function ($attribute, $value, $fail) {
+                        if (!empty($value) && !Validator::make([$attribute => $value], [$attribute => 'url'])->passes()) {
+                            return $fail(trans('laravel-nova-menu::errors.bad_format_external_link'));
+                        }
+                    })
+                    ->hideFromDetail(),
+            ])->dependsOn('link_type', \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_EXTERNAL_LINK),
+
+            NovaDependencyContainer::make([
+                Code::make(trans('laravel-nova-menu::menu.html'), 'html')
+                    ->help(trans('laravel-nova-menu::menu.help_code'))
+                    ->rules('required_without_all:internal_link,external_link', 'max:'.config('laravel-nova-menu.menu_item_html_max_size'))
+                    ->hideFromDetail(function ($ressource, $fields) {
+                        return empty($fields->html);
+                    })
+                    ->hideFromIndex(),
+            ])->dependsOn('link_type', \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_HTML),
 
             Text::make(trans('laravel-nova-menu::menu.html_classes'), 'html_classes')
                 ->rules('nullable', 'max:255', 'regex:/^[0-9a-z\- _]+$/i')
@@ -202,6 +216,23 @@ class MenuItem extends Resource
             ->ordered();
 
         return $query->get()->pluck('name', 'id');
+    }
+
+    /**
+     * Metas values for type link field (default value)
+     *
+     * @return array
+     */
+    protected function metasDefaultLinkType():array
+    {
+        $resource = $this->model();
+        if (empty($resource->id)) {
+            return [];
+        }
+
+        return [
+            'value' => $resource->linkType(),
+        ];
     }
 
     public static function indexQuery(NovaRequest $request, $query)

@@ -19,6 +19,10 @@ class MenuItem extends Model
     }
     use Orderable;
 
+    const TYPE_INTERNAL_LINK = 1;
+    const TYPE_EXTERNAL_LINK = 2;
+    const TYPE_HTML = 3;
+
     protected $table = 'nova_menu_items';
 
     protected $primaryKey = 'id';
@@ -106,8 +110,52 @@ class MenuItem extends Model
         return $href;
     }
 
+    /**
+     * @return int|null
+     */
+    public function linkType(): ?int
+    {
+        if (!empty($this->html)) {
+            return self::TYPE_HTML;
+        }
+
+        if (!empty($this->internal_link)) {
+            return self::TYPE_INTERNAL_LINK;
+        }
+
+        if (!empty($this->external_link)) {
+            return self::TYPE_EXTERNAL_LINK;
+        }
+
+        return null;
+    }
+
     public static function getDepthCacheName(int $itemID): string
     {
         return 'laravel-nova-menu.item.depth.'.$itemID;
+    }
+
+    /**
+     * @return array
+     */
+    public static function linkTypesLabels(): array
+    {
+        return [
+            self::TYPE_INTERNAL_LINK => trans('laravel-nova-menu::menu.internal_link'),
+            self::TYPE_EXTERNAL_LINK => trans('laravel-nova-menu::menu.external_link'),
+            self::TYPE_HTML => trans('laravel-nova-menu::menu.html'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function linkTypesAttributes(): array
+    {
+        return [
+            self::TYPE_INTERNAL_LINK => 'internal_link',
+            self::TYPE_EXTERNAL_LINK => 'external_link',
+            self::TYPE_HTML => 'html',
+        ];
     }
 }
