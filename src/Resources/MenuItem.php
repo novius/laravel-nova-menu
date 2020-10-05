@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use KossShtukert\LaravelNovaSelect2\Select2;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Novius\LaravelNovaMenu\Helpers\MenuHelper;
 use Novius\LaravelNovaMenu\Lenses\MenuItems;
@@ -132,11 +132,16 @@ class MenuItem extends Resource
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
-            Select::make('Type de lien', 'link_type')
+            Select::make(trans('laravel-nova-menu::menu.link_type'), 'link_type')
                 ->options(\Novius\LaravelNovaMenu\Models\MenuItem::linkTypesLabels())
                 ->withMeta($this->metasDefaultLinkType())
                 ->displayUsingLabels()
-                ->rules('required'),
+                ->rules('required')
+                ->onlyOnForms(),
+
+            Text::make(trans('laravel-nova-menu::menu.link_type'), function () {
+                return $this->linkTypeLabel();
+            })->exceptOnForms(),
 
             NovaDependencyContainer::make([
                 Select2::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
@@ -233,6 +238,21 @@ class MenuItem extends Resource
         return [
             'value' => $resource->linkType(),
         ];
+    }
+
+    /**
+     * Get label of current resource link type
+     *
+     * @return string
+     */
+    protected function linkTypeLabel():string
+    {
+        $resource = $this->model();
+        if (empty($resource->id)) {
+            return '';
+        }
+
+        return (\Novius\LaravelNovaMenu\Models\MenuItem::linkTypesLabels())[$resource->linkType()] ?? '';
     }
 
     public static function indexQuery(NovaRequest $request, $query)

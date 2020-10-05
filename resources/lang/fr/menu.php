@@ -20,4 +20,5 @@ return [
     'target_blank' => 'Ouvrir dans un nouvel onglet ?',
     'html' => 'HTML',
     'help_code' => 'Si vous remplissez cette partie vous ne pouvez pas choisir de liens',
+    'link_type' => 'Type de lien',
 ];
