@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'menus_label' => 'Menus',
+    'menu_singular_label' => 'Menu',
     'menu_items' => 'Menu items',
     'menu_item' => 'Menu item',
     'menu_name' => 'Name',
@@ -17,4 +19,8 @@ return [
     'order' => 'Position',
     'name' => 'Name',
     'locale' => 'Locale',
+    'target_blank' => 'Open in a new tab ?',
+    'html' => 'HTML',
+    'help_code' => 'If you fill this area you can\'t choose a link.',
+    'link_type' => 'Link type',
 ];
