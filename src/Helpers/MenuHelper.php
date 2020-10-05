@@ -59,11 +59,23 @@ class MenuHelper
     }
 
     /**
+     * Display menu from its slug
+     * Fallback to menu with current application locale
+     *
+     * You can append '|no-locale-fallback' to slug if you want to skip the default fallback
+     *
      * @param $slug
      * @return string
      */
-    public static function displayMenu(string $slug, $localeFallback = true): string
+    public static function displayMenu(string $slug): string
     {
+        $args = explode('|', $slug, 2);
+        $localeFallback = true;
+        if (isset($args[1]) && $args[1] === 'no-locale-fallback') {
+            $localeFallback = false;
+        }
+        $slug = $args[0];
+
         $locale = app()->getLocale();
         $menu = Menu::query()
             ->where('slug', (string) $slug)

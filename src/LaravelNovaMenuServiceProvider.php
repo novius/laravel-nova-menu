@@ -8,8 +8,8 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
 use Novius\LaravelNovaMenu\Observers\ItemObserver;
-use Novius\LaravelNovaMenu\Resources\MenuItem;
 use Novius\LaravelNovaMenu\Resources\Menu;
+use Novius\LaravelNovaMenu\Resources\MenuItem;
 
 class LaravelNovaMenuServiceProvider extends ServiceProvider
 {
@@ -48,15 +48,7 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
         $this->publishes([__DIR__.'/../resources/lang' => resource_path('lang/vendor/laravel-nova-menu')], 'lang');
 
         Blade::directive('menu', function ($expression) {
-            $expression = trim($expression, '\'"');
-            $args = explode('|', $expression, 2);
-            $localeFallback = 'true';
-            if (isset($args[1]) && $args[1] === 'no-locale-fallback') {
-                $localeFallback = 'false';
-            }
-            $expression = '"'.array_shift($args).'"'; // reformat the slug with quotes
-
-            return "<?php echo Novius\LaravelNovaMenu\Helpers\MenuHelper::displayMenu($expression, $localeFallback) ?>";
+            return "<?php echo Novius\LaravelNovaMenu\Helpers\MenuHelper::displayMenu($expression) ?>";
         });
 
         \Novius\LaravelNovaMenu\Models\MenuItem::observe(ItemObserver::class);
