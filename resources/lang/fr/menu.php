@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'menus_label' => 'Menus',
+    'menu_singular_label' => 'Menu',
     'menu_items' => 'Entrées menu',
     'menu_item' => 'Entrée menu',
     'menu_name' => 'Nom',
@@ -19,5 +21,6 @@ return [
     'locale' => 'Locale',
     'target_blank' => 'Ouvrir dans un nouvel onglet ?',
     'html' => 'HTML',
-    'help_code' => 'Si vous remplissez cette partie vous ne pouvez pas choisir de liens',
+    'help_code' => 'Si vous remplissez cette partie, vous ne pouvez pas choisir de lien.',
+    'link_type' => 'Type de lien',
 ];

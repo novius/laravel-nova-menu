@@ -41,6 +41,26 @@ class Menu extends Resource
     public static $displayInNavigation = true;
 
     /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
+    public static function label()
+    {
+        return trans('laravel-nova-menu::menu.menus_label');
+    }
+
+    /**
+     * Get the displayable singular label of the resource.
+     *
+     * @return string
+     */
+    public static function singularLabel()
+    {
+        return trans('laravel-nova-menu::menu.menu_singular_label');
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param \Illuminate\Http\Request $request
