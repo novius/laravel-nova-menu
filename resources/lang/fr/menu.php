@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'menus_label' => 'Menus',
+    'menu_singular_label' => 'Menu',
     'menu_items' => 'Entrées menu',
     'menu_item' => 'Entrée menu',
     'menu_name' => 'Nom',
