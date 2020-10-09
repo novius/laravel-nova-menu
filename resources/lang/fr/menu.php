@@ -23,4 +23,5 @@ return [
     'html' => 'HTML',
     'help_code' => 'Si vous remplissez cette partie, vous ne pouvez pas choisir de lien.',
     'link_type' => 'Type de lien',
+    'choose_internal_link' => 'Choisissez un lien interne',
 ];
