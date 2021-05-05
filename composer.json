@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "php": "^7.4",
+    "php": "^7.4|^8.0",
     "benjaminhirsch/nova-slug-field": "^1.2",
     "cviebrock/eloquent-sluggable": "^7.0|^8.0",
     "epartment/nova-dependency-container": "^1.2",
