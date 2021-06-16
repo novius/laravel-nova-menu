@@ -11,6 +11,7 @@ return [
     'parent_item' => 'Parent element',
     'internal_link' => 'Internal link',
     'external_link' => 'External link',
+    'empty_link' => 'No link',
     'must_start_with_http' => 'Must start with : http://... or https://...',
     'url' => 'URL',
     'back_to_menu' => 'Back to menu',

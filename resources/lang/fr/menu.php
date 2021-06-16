@@ -11,6 +11,7 @@ return [
     'parent_item' => 'Élément parent',
     'internal_link' => 'Lien interne',
     'external_link' => 'Lien externe',
+    'empty_link' => 'Sans lien',
     'must_start_with_http' => 'Doit être sous la forme : http://... ou https://...',
     'url' => 'URL',
     'back_to_menu' => 'Retour au menu',

@@ -59,14 +59,18 @@ class ItemObserver
         if (request()->has('link_type')) {
             // Prevent multi-types : keep only the value on submitted type
             $attributes = MenuItem::linkTypesAttributes();
-            if (array_key_exists(request()->get('link_type'), $attributes)) {
-                $attrToClean = collect($attributes)->forget(request()->get('link_type'));
-                foreach ($attrToClean as $attr) {
-                    $item->{$attr} = null;
-                }
+            if(request()->get('link_type') === MenuItem::TYPE_EMPTY) {
+                $item->{$attributes[request()->get('link_type')]} = '#';
             } else {
-                foreach ($attributes as $attr) {
-                    $item->{$attr} = null;
+                if (array_key_exists(request()->get('link_type'), $attributes)) {
+                    $attrToClean = collect($attributes)->forget(request()->get('link_type'));
+                    foreach ($attrToClean as $attr) {
+                        $item->{$attr} = null;
+                    }
+                } else {
+                    foreach ($attributes as $attr) {
+                        $item->{$attr} = null;
+                    }
                 }
             }
 
