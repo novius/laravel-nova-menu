@@ -21,7 +21,7 @@
     "epartment/nova-dependency-container": "^1.2",
     "illuminate/support": "^8.43",
     "koss-shtukert/laravel-nova-select2-auto-complete": "^1.20",
-    "novius/laravel-nova-order-nestedset-field": "^2.0.0",
+    "novius/laravel-nova-order-nestedset-field": "^2.0.1",
     "optimistdigital/nova-locale-field": "^2.0"
   },
   "require-dev": {
