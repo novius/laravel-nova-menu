@@ -19,12 +19,9 @@ return [
     'order' => 'Ordre',
     'name' => 'Nom',
     'locale' => 'Locale',
-    'html' => 'HTML',
-    'help_code' => 'Si vous remplissez cette partie, vous ne pouvez pas choisir de lien.',
-    'link_type' => 'Type de lien',
-    'choose_internal_link' => 'Choisissez un lien interne',
     'target_blank' => 'Ouvrir dans un nouvel onglet ?',
     'html' => 'HTML',
     'help_code' => 'Si vous remplissez cette partie, vous ne pouvez pas choisir de lien.',
     'link_type' => 'Type de lien',
+    'choose_internal_link' => 'Choisissez un lien interne',
 ];
