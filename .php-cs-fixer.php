@@ -7,7 +7,6 @@
 // Removed: phpdoc_no_package, phpdoc_summary
 
 $excludes = [
-    'database',
     'dist',
     'node_modules',
     'resources',
