@@ -19,10 +19,10 @@ class MenuItem extends Model
     }
     use Orderable;
 
-    const TYPE_INTERNAL_LINK = 1;
-    const TYPE_EXTERNAL_LINK = 2;
-    const TYPE_HTML = 3;
-    const TYPE_EMPTY = 4;
+    public const TYPE_INTERNAL_LINK = 1;
+    public const TYPE_EXTERNAL_LINK = 2;
+    public const TYPE_HTML = 3;
+    public const TYPE_EMPTY = 4;
 
     protected $table = 'nova_menu_items';
 
