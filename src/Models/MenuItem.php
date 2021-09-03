@@ -84,6 +84,9 @@ class MenuItem extends Model
     {
         $href = '#';
 
+        if(!empty($this->is_empty_link))
+            return $href;
+
         if (!empty($this->html)) {
             return $href;
         }
@@ -128,6 +131,10 @@ class MenuItem extends Model
             return self::TYPE_EXTERNAL_LINK;
         }
 
+        if(!empty($this->is_empty_link)) {
+            return self::TYPE_EMPTY;
+        }
+
         return null;
     }
 
@@ -158,9 +165,6 @@ class MenuItem extends Model
             self::TYPE_INTERNAL_LINK => 'internal_link',
             self::TYPE_EXTERNAL_LINK => 'external_link',
             self::TYPE_HTML => 'html',
-
-            // if TYPE_EMPTY we set as external_link with « # » value
-            self::TYPE_EMPTY => 'external_link',
         ];
     }
 }
