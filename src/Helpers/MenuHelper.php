@@ -117,7 +117,7 @@ class MenuHelper
             return static::getTree($items);
         });
 
-        return view('laravel-nova-menu::front/menu', [
+        return (string) view('laravel-nova-menu::front/menu', [
             'menu' => $menu,
             'tree' => $tree,
         ]);
