@@ -131,7 +131,7 @@ class MenuItem extends Model
             return self::TYPE_EXTERNAL_LINK;
         }
 
-        if(!empty($this->is_empty_link)) {
+        if (!empty($this->is_empty_link)) {
             return self::TYPE_EMPTY;
         }
 
