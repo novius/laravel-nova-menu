@@ -19,13 +19,18 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
     {
         $this->app->booted(function () {
             $this->routes();
-            Nova::resources(config('laravel-nova-menu.resources', []));
+
+            if (!$this->app->runningUnitTests()) {
+                Nova::resources(config('laravel-nova-menu.resources', []));
+            }
         });
 
-        Nova::serving(function (ServingNova $event) {
-            Nova::script('laravel-nova-menu', __DIR__.'/../dist/js/tool.js');
-            Nova::style('laravel-nova-menu', __DIR__.'/../dist/css/tool.css');
-        });
+        if (!$this->app->runningUnitTests()) {
+            Nova::serving(function (ServingNova $event) {
+                Nova::script('laravel-nova-menu', __DIR__.'/../dist/js/tool.js');
+                Nova::style('laravel-nova-menu', __DIR__.'/../dist/css/tool.css');
+            });
+        }
 
         $packageDir = dirname(__DIR__);
 
