@@ -70,7 +70,7 @@ class ItemObserver
                 }
             }
 
-            if (request()->has('link_type') == MenuItem::TYPE_EMPTY) {
+            if (request()->get('link_type') === MenuItem::TYPE_EMPTY) {
                 $item->{menuItem::linkTypesAttributes()[MenuItem::TYPE_EMPTY]} = 1;
             }
 
