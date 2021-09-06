@@ -36,6 +36,7 @@ class MenuItem extends Model
 
     protected $casts = [
         'target_blank' => 'boolean',
+        'is_empty_link' => 'boolean',
     ];
 
     public function menu()

@@ -199,8 +199,13 @@ class MenuItem extends Resource
                     return !empty($fields->html);
                 }),
 
-            Boolean::make(trans('laravel-nova-menu::menu.target_blank'), 'target_blank')
-                ->hideFromIndex(),
+            // dependsOnNot not working on integer.
+            // cf: https://github.com/epartment/nova-dependency-container/issues/121
+            // fixed - commited in July but not release.
+            NovaDependencyContainer::make([
+                Boolean::make(trans('laravel-nova-menu::menu.target_blank'), 'target_blank')
+                    ->hideFromIndex(),
+            ])->dependsOnNot('link_type', (string) \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_EMPTY),
 
             OrderNestedsetField::make(trans('laravel-nova-menu::menu.order'), 'order'),
 
