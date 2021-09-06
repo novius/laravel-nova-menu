@@ -22,6 +22,7 @@ class MenuItem extends Model
     public const TYPE_INTERNAL_LINK = 1;
     public const TYPE_EXTERNAL_LINK = 2;
     public const TYPE_HTML = 3;
+    public const TYPE_EMPTY = 4;
 
     protected $table = 'nova_menu_items';
 
@@ -35,6 +36,7 @@ class MenuItem extends Model
 
     protected $casts = [
         'target_blank' => 'boolean',
+        'is_empty_link' => 'boolean',
     ];
 
     public function menu()
@@ -83,6 +85,10 @@ class MenuItem extends Model
     {
         $href = '#';
 
+        if (!empty($this->is_empty_link)) {
+            return $href;
+        }
+
         if (!empty($this->html)) {
             return $href;
         }
@@ -127,6 +133,10 @@ class MenuItem extends Model
             return self::TYPE_EXTERNAL_LINK;
         }
 
+        if (!empty($this->is_empty_link)) {
+            return self::TYPE_EMPTY;
+        }
+
         return null;
     }
 
@@ -144,6 +154,7 @@ class MenuItem extends Model
             self::TYPE_INTERNAL_LINK => trans('laravel-nova-menu::menu.internal_link'),
             self::TYPE_EXTERNAL_LINK => trans('laravel-nova-menu::menu.external_link'),
             self::TYPE_HTML => trans('laravel-nova-menu::menu.html'),
+            self::TYPE_EMPTY => trans('laravel-nova-menu::menu.empty_link'),
         ];
     }
 
@@ -156,6 +167,7 @@ class MenuItem extends Model
             self::TYPE_INTERNAL_LINK => 'internal_link',
             self::TYPE_EXTERNAL_LINK => 'external_link',
             self::TYPE_HTML => 'html',
+            self::TYPE_EMPTY => 'is_empty_link',
         ];
     }
 }
