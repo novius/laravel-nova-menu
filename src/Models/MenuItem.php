@@ -85,8 +85,9 @@ class MenuItem extends Model
     {
         $href = '#';
 
-        if (!empty($this->is_empty_link))
+        if (!empty($this->is_empty_link)) {
             return $href;
+        }
 
         if (!empty($this->html)) {
             return $href;
