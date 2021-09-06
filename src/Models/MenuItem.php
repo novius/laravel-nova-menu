@@ -165,6 +165,7 @@ class MenuItem extends Model
             self::TYPE_INTERNAL_LINK => 'internal_link',
             self::TYPE_EXTERNAL_LINK => 'external_link',
             self::TYPE_HTML => 'html',
+            self::TYPE_EMPTY = 'is_empty_link',
         ];
     }
 }
