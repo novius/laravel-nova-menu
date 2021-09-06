@@ -14,7 +14,7 @@ class AlterNovaMenuItemsTableAddEmptyLinkType extends Migration
     public function up()
     {
         Schema::table('nova_menu_items', function (Blueprint $table) {
-            $table->text('is_empty_link')->default(0)->after('html');
+            $table->boolean('is_empty_link')->default(0)->after('html');
         });
     }
 
