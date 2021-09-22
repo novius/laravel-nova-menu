@@ -25,11 +25,18 @@
     "optimistdigital/nova-locale-field": "^2.0"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.0"
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "orchestra/testbench": "^6.20.1",
+    "phpunit/phpunit": "^9.3.3"
   },
   "autoload": {
     "psr-4": {
       "Novius\\LaravelNovaMenu\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Novius\\LaravelNovaMenu\\Tests\\": "tests/"
     }
   },
   "extra": {
@@ -42,7 +49,8 @@
   "scripts": {
     "lint": [
       "php-cs-fixer fix --config .php-cs-fixer.php -vv --diff --allow-risky=yes --dry-run"
-    ]
+    ],
+    "test": "vendor/bin/phpunit --verbose --log-junit phpunit.log.xml"
   },
   "config": {
     "sort-packages": true

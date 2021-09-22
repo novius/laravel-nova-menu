@@ -72,6 +72,8 @@ class ItemObserver
 
             if ((int) request()->get('link_type') === MenuItem::TYPE_EMPTY) {
                 $item->{menuItem::linkTypesAttributes()[MenuItem::TYPE_EMPTY]} = 1;
+            } else {
+                $item->{menuItem::linkTypesAttributes()[MenuItem::TYPE_EMPTY]} = 0;
             }
 
             unset($item->link_type);
