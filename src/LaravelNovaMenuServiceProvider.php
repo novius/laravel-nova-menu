@@ -32,7 +32,7 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
         $this->publishes([$packageDir.'/resources/views' => resource_path('views/vendor/laravel-nova-menu')], 'views');
 
         $this->loadTranslationsFrom($packageDir.'/resources/lang', 'laravel-nova-menu');
-        $this->publishes([__DIR__.'/../resources/lang' => lang_path('vendor/vendor/laravel-nova-menu')], 'lang');
+        $this->publishes([__DIR__.'/../resources/lang' => lang_path('vendor/laravel-nova-menu')], 'lang');
 
         Blade::directive('menu', function ($expression) {
             return "<?php echo Novius\LaravelNovaMenu\Helpers\MenuHelper::displayMenu($expression) ?>";
