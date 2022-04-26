@@ -6,7 +6,7 @@ use Novius\LaravelNovaMenu\Resources\MenuItem;
 
 return [
     /*
-     * Entities linkable by an menu item. For instance "Pages".
+     * Entities linkable by a menu item. For instance "Pages".
      * So the pages of your application will be listed and linkable by an item menu.
      *
      * It must contain pairs of:
@@ -32,15 +32,6 @@ return [
     'linkable_routes' => [],
 
     /*
-     * Internal links use select2
-     *
-     * This config refers to the select2 api options
-     * minimumResultsForSearch : The minimum number of results required to display the search box.
-     * https://select2.org/configuration/options-api
-     */
-    'select2_minimumResultsForSearch' => 5,
-
-    /*
      |--------------------------------------------------------------------------
      | Locales
      |--------------------------------------------------------------------------
@@ -52,13 +43,8 @@ return [
      */
     'locales' => [
         'en' => 'English',
-        //'fr' => 'Français',
+        // 'fr' => 'Français',
     ],
-
-    /*
-     * The max number of locales shown on resource index
-     */
-    'max_locales_on_index' => 4,
 
     /*
      * The max number of html's characters in menu field

@@ -3,13 +3,13 @@
 namespace Novius\LaravelNovaMenu\Resources;
 
 use App\Nova\Resource;
-use Benjaminhirsch\NovaSlugField\Slug;
-use Benjaminhirsch\NovaSlugField\TextWithSlug;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
-use OptimistDigital\NovaLocaleField\LocaleField;
+use Laravel\Nova\Fields\Slug;
+use Novius\LaravelNovaMenu\Actions\TranslateMenu;
 use Novius\LaravelNovaMenu\Filters\Locale;
 
 class Menu extends Resource
@@ -71,17 +71,17 @@ class Menu extends Resource
         return [
             ID::make()->sortable(),
 
-            TextWithSlug::make(trans('laravel-nova-menu::menu.menu_name'), 'name')
-                ->slug('slug')
+            Text::make(trans('laravel-nova-menu::menu.menu_name'), 'name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
             Slug::make(trans('laravel-nova-menu::menu.slug'), 'slug')
+                ->from('name')
                 ->rules('required', 'regex:/^[0-9a-z\-_]+$/i'),
 
-            LocaleField::make('Locale', 'locale', 'locale_parent_id')
-                ->locales(config('laravel-nova-menu.locales', ['en' => 'English']))
-                ->maxLocalesOnIndex(config('laravel-nova-menu.max_locales_on_index', 4)),
+            Select::make(trans('laravel-nova-menu::menu.locale'), 'locale')
+                ->options(config('laravel-nova-menu.locales', ['en' => 'English']))
+                ->rules('in:'.implode(',', array_keys(config('laravel-nova-menu.locales', ['en' => 'English'])))),
 
             Text::make(trans('laravel-nova-menu::menu.blade_directive'), function () {
                 return sprintf('<code class="p-2 bg-30 text-sm text-success">@menu("%s")</code>', $this->slug);
@@ -136,6 +136,13 @@ class Menu extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        $locales = config('laravel-nova-menu.locales', ['en' => 'English']);
+        if (count($locales) <= 1) {
+            return [];
+        }
+
+        return [
+            (new TranslateMenu())->onlyInline(),
+        ];
     }
 }

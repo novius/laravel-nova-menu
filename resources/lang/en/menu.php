@@ -25,4 +25,5 @@ return [
     'help_code' => 'If you fill this area you can\'t choose a link.',
     'link_type' => 'Link type',
     'choose_internal_link' => 'Choose an internal link',
+    'successfully_translated_menu' => 'Menu has been successfully translated.',
 ];

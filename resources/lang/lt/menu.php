@@ -7,5 +7,4 @@ return [
     'external_link' => 'Išorinė nuoroda',
     'must_start_with_http' => 'Privalo prasidėti su : http://... or https://...',
     'url' => 'Nuoroda',
-    'back_to_menu' => 'Grįžti į meniu',
 ];

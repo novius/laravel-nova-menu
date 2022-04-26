@@ -2,15 +2,23 @@
 
 namespace Novius\LaravelNovaMenu\Models;
 
-use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 /**
- * @property mixed name
+ * @property int id
+ * @property string name
+ * @property string slug
+ * @property ?string locale
+ * @property ?int locale_parent_id
+ * @property Carbon created_at
+ * @property Carbon updated_at
  */
 class Menu extends Model
 {
-    use Sluggable;
+    use HasSlug;
 
     protected $table = 'nova_menus';
 
@@ -27,27 +35,19 @@ class Menu extends Model
         return $this->hasMany(MenuItem::class);
     }
 
-    /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array
-     */
-    public function sluggable(): array
+    public function parent()
     {
-        return [
-            'slug' => [
-                'source' => 'slug_or_name',
-            ],
-        ];
+        return $this->hasOne(static::class, 'id', 'locale_parent_id');
     }
 
-    public function getSlugOrNameAttribute()
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions() : SlugOptions
     {
-        if ($this->slug != '') {
-            return $this->slug;
-        }
-
-        return $this->name;
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
     }
 
     public function getTreeCacheName()

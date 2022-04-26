@@ -7,12 +7,12 @@ A Nova tool to manage menus.
 
 ## Requirements
 
-* PHP >= 7.4
-* Laravel Nova >= 3.0
-* Laravel Framework >= 8.43
+* PHP >= 8.1
+* Laravel Nova >= 4.0
+* Laravel Framework >= 9.0
 
-> **NOTE**: These instructions are for Laravel >= 8.43. If you are using prior version, please
-> see the [previous version's docs](https://github.com/novius/laravel-nova-menu/tree/2-x).
+> **NOTE**: These instructions are for Laravel >= 9.0 and Laravel Nova 4.0. If you are using prior version, please
+> see the [previous version's docs](https://github.com/novius/laravel-nova-menu/tree/3-x).
 
 
 ## Installation

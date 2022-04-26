@@ -3,21 +3,19 @@
 namespace Novius\LaravelNovaMenu\Resources;
 
 use App\Nova\Resource;
-use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use KossShtukert\LaravelNovaSelect2\Select2;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Novius\LaravelNovaMenu\Helpers\MenuHelper;
 use Novius\LaravelNovaMenu\Lenses\MenuItems;
-use Novius\LaravelNovaMenu\Tools\BackToMenu;
 use Novius\LaravelNovaOrderNestedsetField\OrderNestedsetField;
 
 class MenuItem extends Resource
@@ -97,6 +95,9 @@ class MenuItem extends Resource
 
             Text::make(trans('laravel-nova-menu::menu.name'), function () use ($request) {
                 $resource = $this->resource;
+                if (empty($resource->id)) {
+                    return '';
+                }
 
                 $depth = Cache::rememberForever(\Novius\LaravelNovaMenu\Models\MenuItem::getDepthCacheName($resource->id), function () use ($resource) {
                     $result = \Novius\LaravelNovaMenu\Models\MenuItem::scoped([
@@ -143,42 +144,55 @@ class MenuItem extends Resource
                 return $this->linkTypeLabel();
             })->exceptOnForms(),
 
-            NovaDependencyContainer::make([
-                Select2::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
-                    ->options(MenuHelper::links())
-                    ->rules('nullable', 'required_without_all:external_link,html', 'in:'.implode(',', array_keys(MenuHelper::links())))
-                    ->configuration([
-                        'placeholder' => trans('laravel-nova-menu::menu.choose_internal_link'),
-                        'width' => '100%',
-                        'allowClear' => true,
-                        'multiple' => false,
-                        'minimumResultsForSearch' => config('laravel-nova-menu.select2_minimumResultsForSearch', 5),
-                    ])
-                    ->hideFromIndex()
-                    ->hideFromDetail(),
-            ])->dependsOn('link_type', \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_INTERNAL_LINK),
-
-            NovaDependencyContainer::make([
-                Text::make(trans('laravel-nova-menu::menu.external_link'), 'external_link')
-                    ->help(trans('laravel-nova-menu::menu.must_start_with_http'))
-                    ->nullable()
-                    ->rules('max:191', 'required_without_all:internal_link,html', function ($attribute, $value, $fail) {
-                        if (!empty($value) && !Validator::make([$attribute => $value], [$attribute => 'url'])->passes()) {
-                            return $fail(trans('laravel-nova-menu::errors.bad_format_external_link'));
+            Select::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
+                ->searchable()
+                ->options(MenuHelper::links())
+                ->hideFromIndex()
+                ->hideFromDetail()
+                ->dependsOn(
+                    ['link_type'],
+                    function (Select $field, NovaRequest $request, FormData $formData) {
+                        if ($formData->link_type !== \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_INTERNAL_LINK) {
+                            $field->hide();
+                        } else {
+                            $field->required();
                         }
-                    })
-                    ->hideFromDetail(),
-            ])->dependsOn('link_type', \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_EXTERNAL_LINK),
+                    }
+                ),
 
-            NovaDependencyContainer::make([
-                Code::make(trans('laravel-nova-menu::menu.html'), 'html')
-                    ->help(trans('laravel-nova-menu::menu.help_code'))
-                    ->rules('required_without_all:internal_link,external_link', 'max:'.config('laravel-nova-menu.menu_item_html_max_size'))
-                    ->hideFromDetail(function ($ressource, $fields) {
-                        return empty($fields->html);
-                    })
-                    ->hideFromIndex(),
-            ])->dependsOn('link_type', \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_HTML),
+            Text::make(trans('laravel-nova-menu::menu.external_link'), 'external_link')
+                ->help(trans('laravel-nova-menu::menu.must_start_with_http'))
+                ->nullable()
+                ->rules('max:191', 'required_without_all:internal_link,html', function ($attribute, $value, $fail) {
+                    if (!empty($value) && !Validator::make([$attribute => $value], [$attribute => 'url'])->passes()) {
+                        return $fail(trans('laravel-nova-menu::errors.bad_format_external_link'));
+                    }
+                })
+                ->hideFromDetail()
+                ->dependsOn(
+                    ['link_type'],
+                    function (Text $field, NovaRequest $request, FormData $formData) {
+                        if ($formData->link_type !== \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_EXTERNAL_LINK) {
+                            $field->hide();
+                        }
+                    }
+                ),
+
+            Code::make(trans('laravel-nova-menu::menu.html'), 'html')
+                ->help(trans('laravel-nova-menu::menu.help_code'))
+                ->rules('required_without_all:internal_link,external_link', 'max:'.config('laravel-nova-menu.menu_item_html_max_size'))
+                ->hideFromDetail(function ($ressource, $fields) {
+                    return empty($fields->html);
+                })
+                ->hideFromIndex()
+                ->dependsOn(
+                    ['link_type'],
+                    function (Code $field, NovaRequest $request, FormData $formData) {
+                        if ($formData->link_type !== \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_HTML) {
+                            $field->hide();
+                        }
+                    }
+                ),
 
             Text::make(trans('laravel-nova-menu::menu.html_classes'), 'html_classes')
                 ->rules('nullable', 'max:255', 'regex:/^[0-9a-z\- _]+$/i')
@@ -199,20 +213,18 @@ class MenuItem extends Resource
                     return !empty($fields->html);
                 }),
 
-            // dependsOnNot not working on integer.
-            // cf: https://github.com/epartment/nova-dependency-container/issues/121
-            // fixed - commited in July but not release.
-            NovaDependencyContainer::make([
-                Boolean::make(trans('laravel-nova-menu::menu.target_blank'), 'target_blank')
-                    ->hideFromIndex(),
-            ])->dependsOnNot('link_type', (string) \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_EMPTY),
+            Boolean::make(trans('laravel-nova-menu::menu.target_blank'), 'target_blank')
+                ->hideFromIndex()
+                ->dependsOn(
+                    ['link_type'],
+                    function (Boolean $field, NovaRequest $request, FormData $formData) {
+                        if ($formData->link_type === \Novius\LaravelNovaMenu\Models\MenuItem::TYPE_EMPTY) {
+                            $field->hide();
+                        }
+                    }
+                ),
 
             OrderNestedsetField::make(trans('laravel-nova-menu::menu.order'), 'order'),
-
-            BackToMenu::make()->test()->withMeta([
-                'menu_id' => $this->resource->menu_id,
-                'back_trans' => trans('laravel-nova-menu::menu.back_to_menu'),
-            ]),
         ];
     }
 

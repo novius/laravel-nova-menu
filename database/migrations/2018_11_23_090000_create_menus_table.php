@@ -17,7 +17,14 @@ class CreateMenusTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('locale', 6)->default('en');
+            $table->unsignedInteger('locale_parent_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('locale_parent_id')
+                ->references('id')
+                ->on('nova_menus')
+                ->restrictOnDelete();
         });
 
         Schema::create('nova_menu_items', function (Blueprint $table) {
@@ -29,13 +36,19 @@ class CreateMenusTable extends Migration
             $table->integer('right')->unsigned();
             $table->string('external_link')->nullable();
             $table->string('internal_link')->nullable();
+            $table->string('html_classes', 255)->nullable();
+            $table->text('html')->nullable();
+            $table->boolean('is_empty_link')->default(false);
+            $table->boolean('target_blank')->default(false);
             $table->timestamps();
 
-            $table->foreign('menu_id')->references('id')
+            $table->foreign('menu_id')
+                ->references('id')
                 ->on('nova_menus')
                 ->onDelete('cascade');
 
-            $table->foreign('parent_id')->references('id')
+            $table->foreign('parent_id')
+                ->references('id')
                 ->on('nova_menu_items')
                 ->onDelete('cascade');
         });
