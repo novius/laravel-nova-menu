@@ -17,11 +17,11 @@
   "require": {
     "php": "^7.4|^8.0",
     "benjaminhirsch/nova-slug-field": "^1.2",
-    "cviebrock/eloquent-sluggable": "^7.0|^8.0",
+    "cviebrock/eloquent-sluggable": "^7.0|^8.0|^9.0",
     "epartment/nova-dependency-container": "^1.2",
-    "illuminate/support": "^8.43",
+    "illuminate/support": "^8.43|^9.0",
     "koss-shtukert/laravel-nova-select2-auto-complete": "^1.20",
-    "novius/laravel-nova-order-nestedset-field": "^2.0.1",
+    "novius/laravel-nova-order-nestedset-field": "^2.0.1|^3.0",
     "optimistdigital/nova-locale-field": "^2.0"
   },
   "require-dev": {
