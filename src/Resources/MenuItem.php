@@ -163,7 +163,7 @@ class MenuItem extends Resource
             Text::make(trans('laravel-nova-menu::menu.external_link'), 'external_link')
                 ->help(trans('laravel-nova-menu::menu.must_start_with_http'))
                 ->nullable()
-                ->rules('max:191', 'required_without_all:internal_link,html', function ($attribute, $value, $fail) {
+                ->rules('max:191', 'required_if:link_type,'.\Novius\LaravelNovaMenu\Models\MenuItem::TYPE_EXTERNAL_LINK, function ($attribute, $value, $fail) {
                     if (!empty($value) && !Validator::make([$attribute => $value], [$attribute => 'url'])->passes()) {
                         return $fail(trans('laravel-nova-menu::errors.bad_format_external_link'));
                     }
@@ -180,7 +180,7 @@ class MenuItem extends Resource
 
             Code::make(trans('laravel-nova-menu::menu.html'), 'html')
                 ->help(trans('laravel-nova-menu::menu.help_code'))
-                ->rules('required_without_all:internal_link,external_link', 'max:'.config('laravel-nova-menu.menu_item_html_max_size'))
+                ->rules('required_if:link_type,'.\Novius\LaravelNovaMenu\Models\MenuItem::TYPE_HTML, 'max:'.config('laravel-nova-menu.menu_item_html_max_size'))
                 ->hideFromDetail(function ($ressource, $fields) {
                     return empty($fields->html);
                 })
