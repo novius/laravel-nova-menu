@@ -3,6 +3,7 @@
 namespace Novius\LaravelNovaMenu\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
@@ -10,7 +11,6 @@ use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
 
 /**
  * Class MenuItem
- * @package Novius\LaravelNovaMenu\Models
  */
 class MenuItem extends Model
 {
@@ -20,8 +20,11 @@ class MenuItem extends Model
     use Orderable;
 
     public const TYPE_INTERNAL_LINK = 1;
+
     public const TYPE_EXTERNAL_LINK = 2;
+
     public const TYPE_HTML = 3;
+
     public const TYPE_EMPTY = 4;
 
     protected $table = 'nova_menu_items';
@@ -37,29 +40,31 @@ class MenuItem extends Model
     protected $casts = [
         'target_blank' => 'boolean',
         'is_empty_link' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    public function menu()
+    public function menu(): BelongsTo
     {
         return $this->belongsTo(Menu::class);
     }
 
-    public function getLftName()
+    public function getLftName(): string
     {
         return 'left';
     }
 
-    public function getRgtName()
+    public function getRgtName(): string
     {
         return 'right';
     }
 
-    public function getParentIdName()
+    public function getParentIdName(): string
     {
         return 'parent_id';
     }
 
-    protected function getScopeAttributes()
+    protected function getScopeAttributes(): array
     {
         return [
             'menu_id',
@@ -78,26 +83,24 @@ class MenuItem extends Model
 
     /**
      * Creates an href for the menu item according to its type.
-     *
-     * @return string
      */
     public function href(): string
     {
         $href = '#';
 
-        if (!empty($this->is_empty_link)) {
+        if (! empty($this->is_empty_link)) {
             return $href;
         }
 
-        if (!empty($this->html)) {
+        if (! empty($this->html)) {
             return $href;
         }
 
-        if (!empty($this->external_link)) {
+        if (! empty($this->external_link)) {
             $href = $this->external_link;
         }
 
-        if (!empty($this->internal_link)) {
+        if (! empty($this->internal_link)) {
             $infos = explode(':', $this->internal_link);
             if (Str::startsWith($this->internal_link, 'linkable_route')) {
                 if (Route::has($infos[1])) {
@@ -107,7 +110,7 @@ class MenuItem extends Model
                 $className = $infos[1];
                 $id = $infos[2];
                 $item = $className::find($id);
-                if (!empty($item->id)) {
+                if (! empty($item->id)) {
                     $href = $item->linkableUrl();
                 }
             }
@@ -116,24 +119,21 @@ class MenuItem extends Model
         return $href;
     }
 
-    /**
-     * @return int|null
-     */
     public function linkType(): ?int
     {
-        if (!empty($this->html)) {
+        if (! empty($this->html)) {
             return self::TYPE_HTML;
         }
 
-        if (!empty($this->internal_link)) {
+        if (! empty($this->internal_link)) {
             return self::TYPE_INTERNAL_LINK;
         }
 
-        if (!empty($this->external_link)) {
+        if (! empty($this->external_link)) {
             return self::TYPE_EXTERNAL_LINK;
         }
 
-        if (!empty($this->is_empty_link)) {
+        if (! empty($this->is_empty_link)) {
             return self::TYPE_EMPTY;
         }
 
@@ -145,9 +145,6 @@ class MenuItem extends Model
         return 'laravel-nova-menu.item.depth.'.$itemID;
     }
 
-    /**
-     * @return array
-     */
     public static function linkTypesLabels(): array
     {
         return [
@@ -158,9 +155,6 @@ class MenuItem extends Model
         ];
     }
 
-    /**
-     * @return array
-     */
     public static function linkTypesAttributes(): array
     {
         return [

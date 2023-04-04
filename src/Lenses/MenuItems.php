@@ -2,21 +2,19 @@
 
 namespace Novius\LaravelNovaMenu\Lenses;
 
-use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Lenses\Lens;
+use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\LensRequest;
+use Laravel\Nova\Lenses\Lens;
 
 class MenuItems extends Lens
 {
     /**
      * Get the query builder / paginator for the lens.
      *
-     * @param  \Laravel\Nova\Http\Requests\LensRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return mixed
      */
-    public static function query(LensRequest $request, $query)
+    public static function query(LensRequest $request, $query): mixed
     {
         return $request->withOrdering($request->withFilters(
             $query
@@ -25,11 +23,8 @@ class MenuItems extends Lens
 
     /**
      * Get the fields available to the lens.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
      */
-    public function fields(Request $request)
+    public function fields(Request $request): array
     {
         return [
             ID::make('ID', 'id')->sortable(),
@@ -38,21 +33,16 @@ class MenuItems extends Lens
 
     /**
      * Get the filters available for the lens.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
      */
-    public function filters(Request $request)
+    public function filters(Request $request): array
     {
         return [];
     }
 
     /**
      * Get the URI key for the lens.
-     *
-     * @return string
      */
-    public function uriKey()
+    public function uriKey(): string
     {
         return 'menu-items';
     }

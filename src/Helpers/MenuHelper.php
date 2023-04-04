@@ -15,8 +15,6 @@ class MenuHelper
      * Returns a sorted array of linkable items and routes.
      * This collection is used in the back office to feed a select list.
      * This select list is intended for adding new menu items.
-     *
-     * @return array
      */
     public static function links(): array
     {
@@ -47,9 +45,6 @@ class MenuHelper
      * Check out the config file or the readme file to know more about linkable routes.
      *
      * @overridable
-     * @param $routeName
-     * @param $translation
-     * @return array
      */
     protected static function linkableRoute(string $routeName, string $translation): array
     {
@@ -63,9 +58,6 @@ class MenuHelper
      * Fallback to menu with current application locale
      *
      * You can append '|no-locale-fallback' to slug if you want to skip the default fallback
-     *
-     * @param $slug
-     * @return string
      */
     public static function displayMenu(string $slug): string
     {
@@ -81,7 +73,7 @@ class MenuHelper
             ->where('slug', (string) $slug)
             ->first();
 
-        if ($localeFallback && !empty($menu) && $menu->locale !== $locale) {
+        if ($localeFallback && ! empty($menu) && $menu->locale !== $locale) {
             if (empty($menu->locale_parent_id)) {
                 $menu = Menu::query()
                     ->where('locale_parent_id', $menu->id)
@@ -123,10 +115,6 @@ class MenuHelper
         ]);
     }
 
-    /**
-     * @param Collection $items
-     * @return array
-     */
     protected static function getTree(Collection $items): array
     {
         $tree = [];

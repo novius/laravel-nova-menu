@@ -15,8 +15,6 @@ class TranslateMenu extends Action
     /**
      * Perform the action on the given models.
      *
-     * @param \Laravel\Nova\Fields\ActionFields $fields
-     * @param \Illuminate\Support\Collection $models
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
@@ -31,7 +29,7 @@ class TranslateMenu extends Action
             return Action::danger(trans('laravel-nova-menu::errors.menu_already_translated'));
         }
 
-        if (!empty($menuToTranslate->locale_parent_id)) {
+        if (! empty($menuToTranslate->locale_parent_id)) {
             $menuToTranslate = $menuToTranslate->parent;
             if (empty($menuToTranslate)) {
                 return Action::danger(trans('laravel-nova-menu::errors.error_during_menu_translation'));
@@ -52,7 +50,7 @@ class TranslateMenu extends Action
         $translatedMenu->locale = $locale;
         $translatedMenu->locale_parent_id = $menuToTranslate->id;
 
-        if (!$translatedMenu->save()) {
+        if (! $translatedMenu->save()) {
             return Action::danger(trans('laravel-nova-menu::errors.error_during_menu_translation'));
         }
 
@@ -62,7 +60,6 @@ class TranslateMenu extends Action
     /**
      * Get the fields available on the action.
      *
-     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
      * @return array
      */
     public function fields(NovaRequest $request)

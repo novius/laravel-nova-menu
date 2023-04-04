@@ -7,17 +7,11 @@ use Novius\LaravelNovaMenu\Models\MenuItem;
 
 class ItemObserver
 {
-    /**
-     * @param MenuItem $item
-     */
     public function saving(MenuItem $item)
     {
         $this->cleanModel($item);
     }
 
-    /**
-     * @param MenuItem $item
-     */
     public function created(MenuItem $item)
     {
         Cache::forget($item->menu->getTreeCacheName());
@@ -28,9 +22,6 @@ class ItemObserver
         }
     }
 
-    /**
-     * @param MenuItem $item
-     */
     public function updated(MenuItem $item)
     {
         Cache::forget($item->menu->getTreeCacheName());
@@ -41,9 +32,6 @@ class ItemObserver
         }
     }
 
-    /**
-     * @param MenuItem $item
-     */
     public function deleted(MenuItem $item)
     {
         Cache::forget($item->menu->getTreeCacheName());

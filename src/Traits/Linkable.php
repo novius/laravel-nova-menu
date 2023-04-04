@@ -11,8 +11,6 @@ namespace Novius\LaravelNovaMenu\Traits;
  * This is used for building the menu links in front office.
  *
  * Trait Linkable
- *
- * @package App
  */
 trait Linkable
 {
@@ -20,10 +18,6 @@ trait Linkable
 
     abstract public function linkableTitle(): string;
 
-    /**
-     * @param string $prefix
-     * @return array
-     */
     public static function linkableItems(string $prefix = ''): array
     {
         return static::all()->mapWithKeys(function ($item) use ($prefix) {
@@ -40,7 +34,6 @@ trait Linkable
      * Returns the id of the linkable item.
      *
      * @overridable
-     * @return string
      */
     protected function linkableId(): string
     {
@@ -51,10 +44,6 @@ trait Linkable
 
     /**
      * Returns a label, optionally prefixed.
-     *
-     * @param $name
-     * @param $prefix
-     * @return string
      */
     protected static function linkableLabel(string $name, string $prefix = ''): string
     {
