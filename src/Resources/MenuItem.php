@@ -85,7 +85,6 @@ class MenuItem extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function fields(Request $request)
@@ -93,7 +92,7 @@ class MenuItem extends Resource
         return [
             ID::make(),
 
-            Text::make(trans('laravel-nova-menu::menu.name'), function () use ($request) {
+            Text::make(trans('laravel-nova-menu::menu.name'), function () {
                 $resource = $this->resource;
                 if (empty($resource->id)) {
                     return '';
@@ -164,7 +163,7 @@ class MenuItem extends Resource
                 ->help(trans('laravel-nova-menu::menu.must_start_with_http'))
                 ->nullable()
                 ->rules('max:191', 'required_if:link_type,'.\Novius\LaravelNovaMenu\Models\MenuItem::TYPE_EXTERNAL_LINK, function ($attribute, $value, $fail) {
-                    if (!empty($value) && !Validator::make([$attribute => $value], [$attribute => 'url'])->passes()) {
+                    if (! empty($value) && ! Validator::make([$attribute => $value], [$attribute => 'url'])->passes()) {
                         return $fail(trans('laravel-nova-menu::errors.bad_format_external_link'));
                     }
                 })
@@ -202,15 +201,15 @@ class MenuItem extends Resource
                 })
                 ->hideFromIndex(),
 
-            Text::make(trans('laravel-nova-menu::menu.url'), function () use ($request) {
+            Text::make(trans('laravel-nova-menu::menu.url'), function () {
                 $url = $this->resource->href();
 
-                return sprintf('<a href="%s" title="%s" target="_blank">%s</a>', $url, $url, Str::limit($url, 50));
+                return sprintf('<a class="link-default" href="%s" title="%s" target="_blank">%s</a>', $url, $url, Str::limit($url, 50));
             })->asHtml()
                 ->hideWhenCreating()
                 ->hideWhenUpdating()
                 ->hideFromDetail(function ($ressource, $fields) {
-                    return !empty($fields->html);
+                    return ! empty($fields->html);
                 }),
 
             Boolean::make(trans('laravel-nova-menu::menu.target_blank'), 'target_blank')
@@ -242,10 +241,8 @@ class MenuItem extends Resource
 
     /**
      * Metas values for type link field (default value)
-     *
-     * @return array
      */
-    protected function metasDefaultLinkType():array
+    protected function metasDefaultLinkType(): array
     {
         $resource = $this->model();
         if (empty($resource->id)) {
@@ -259,17 +256,15 @@ class MenuItem extends Resource
 
     /**
      * Get label of current resource link type
-     *
-     * @return string
      */
-    protected function linkTypeLabel():string
+    protected function linkTypeLabel(): string
     {
         $resource = $this->model();
         if (empty($resource->id)) {
             return '';
         }
 
-        return (\Novius\LaravelNovaMenu\Models\MenuItem::linkTypesLabels())[$resource->linkType()] ?? '';
+        return \Novius\LaravelNovaMenu\Models\MenuItem::linkTypesLabels()[$resource->linkType()] ?? '';
     }
 
     public static function indexQuery(NovaRequest $request, $query)
@@ -278,8 +273,7 @@ class MenuItem extends Resource
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param array $orderings
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     protected static function applyOrderings($query, array $orderings)
@@ -290,7 +284,6 @@ class MenuItem extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -301,7 +294,6 @@ class MenuItem extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -312,7 +304,6 @@ class MenuItem extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -325,7 +316,6 @@ class MenuItem extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function actions(Request $request)

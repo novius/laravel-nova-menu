@@ -10,13 +10,11 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->app->booted(function () {
-            if (!$this->app->runningUnitTests()) {
+            if (! $this->app->runningUnitTests()) {
                 Nova::resources(config('laravel-nova-menu.resources', []));
             }
         });
@@ -31,8 +29,8 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
         $this->loadViewsFrom($packageDir.'/resources/views', 'laravel-nova-menu');
         $this->publishes([$packageDir.'/resources/views' => resource_path('views/vendor/laravel-nova-menu')], 'views');
 
-        $this->loadTranslationsFrom($packageDir.'/resources/lang', 'laravel-nova-menu');
-        $this->publishes([__DIR__.'/../resources/lang' => lang_path('vendor/laravel-nova-menu')], 'lang');
+        $this->loadTranslationsFrom($packageDir.'/lang', 'laravel-nova-menu');
+        $this->publishes([__DIR__.'/../lang' => lang_path('vendor/laravel-nova-menu')], 'lang');
 
         Blade::directive('menu', function ($expression) {
             return "<?php echo Novius\LaravelNovaMenu\Helpers\MenuHelper::displayMenu($expression) ?>";
@@ -47,10 +45,8 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
 
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(
             __DIR__.'/../config/laravel-nova-menu.php',

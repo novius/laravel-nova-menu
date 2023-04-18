@@ -1,58 +1,67 @@
 {
-  "name": "novius/laravel-nova-menu",
-  "description": "A Laravel Nova resource tool.",
-  "keywords": [
-    "laravel",
-    "nova",
-    "menu"
-  ],
-  "license": "AGPL-3.0-or-later",
-  "authors": [
-    {
-      "name": "Novius Agency",
-      "email": "team-developpeurs@novius.com",
-      "homepage": "https://www.novius.com"
-    }
-  ],
-  "require": {
-    "php": "^8.1",
-    "laravel/nova": "^4.0",
-    "illuminate/support": "^9.0",
-    "optimistdigital/nova-locale-field": "^2.0",
-    "novius/laravel-nova-order-nestedset-field": "^4.0",
-    "spatie/laravel-sluggable": "^3.4.0"
-  },
-  "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.8",
-    "orchestra/testbench": "^7.4.0",
-    "phpunit/phpunit": "^9.3.3"
-  },
-  "autoload": {
-    "psr-4": {
-      "Novius\\LaravelNovaMenu\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Novius\\LaravelNovaMenu\\Tests\\": "tests/"
-    }
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Novius\\LaravelNovaMenu\\LaravelNovaMenuServiceProvider"
-      ]
-    }
-  },
-  "scripts": {
-    "lint": [
-      "php-cs-fixer fix --config .php-cs-fixer.php -vv --diff --allow-risky=yes "
+    "name": "novius/laravel-nova-menu",
+    "description": "A Nova resource tool to manage menus in your application.",
+    "keywords": [
+        "laravel",
+        "nova",
+        "menu"
     ],
-    "test": "vendor/bin/phpunit --verbose --log-junit phpunit.log.xml"
-  },
-  "config": {
-    "sort-packages": true
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Novius Agency",
+            "email": "team-developpeurs@novius.com",
+            "homepage": "https://www.novius.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "laravel/nova": "^4.0",
+        "illuminate/support": "^9.0 | ^10.0",
+        "optimistdigital/nova-locale-field": "^2.0",
+        "novius/laravel-nova-order-nestedset-field": "^4.0",
+        "spatie/laravel-sluggable": "^3.4.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.7",
+        "orchestra/testbench": "^7.4.0",
+        "phpunit/phpunit": "^9.3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Novius\\LaravelNovaMenu\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Novius\\LaravelNovaMenu\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Novius\\LaravelNovaMenu\\LaravelNovaMenuServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "fmt": [
+            "./vendor/bin/pint -v"
+        ],
+        "lint": [
+            "@composer fmt -- --test"
+        ],
+        "test": "vendor/bin/phpunit --verbose --log-junit phpunit.log.xml"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

@@ -113,7 +113,7 @@ class ItemObserverTest extends TestCase
     {
         $menu = new Menu();
         $menu->name = 'Test menu';
-        if (!$menu->save()) {
+        if (! $menu->save()) {
             throw new \Exception('Unable to save menu.');
         }
 
