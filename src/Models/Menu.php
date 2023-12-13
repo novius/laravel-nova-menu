@@ -2,6 +2,7 @@
 
 namespace Novius\LaravelNovaMenu\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -17,6 +18,11 @@ use Spatie\Sluggable\SlugOptions;
  * @property ?int locale_parent_id
  * @property Carbon created_at
  * @property Carbon updated_at
+ * @method static Builder|Menu newModelQuery()
+ * @method static Builder|Menu newQuery()
+ * @method static Builder|Menu query()
+ *
+ * @mixin \Eloquent
  */
 class Menu extends Model
 {

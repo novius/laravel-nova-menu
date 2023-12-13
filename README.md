@@ -50,7 +50,7 @@ php artisan vendor:publish --provider="Novius\LaravelNovaMenu\LaravelNovaMenuSer
 You can display menu with : 
 
 ```blade
-@menu("slug-of-menu")
+<x-menu slug="slug-of-menu" />
 ```
 
 By default a fallback to app()->getLocale() is activated. 
@@ -58,7 +58,13 @@ By default a fallback to app()->getLocale() is activated.
 If you want force a specific slug with no fallback you can call :
 
 ```blade
-@menu("slug-of-menu|no-locale-fallback")
+<x-menu slug="slug-of-menu" :localeFallback="false" />
+```
+
+If you want to use a specific view you can call :
+
+```blade
+<x-menu slug="slug-of-menu" view="partial/menu" />
 ```
 
 ### Override views
@@ -131,6 +137,33 @@ return [
     ],
     ...
 ];
+```
+
+### Customize tree passed to the view
+
+```php
+<?php
+
+namespace App\Providers;
+
+use Novius\LaravelNovaMenu\LaravelNovaMenuService;
+
+class AppServiceProvider extends ServiceProvider
+{
+     // ...
+     
+    public function boot()
+    {
+        /**
+         * @var LaravelNovaMenuService $menu
+         */
+        $menu = $this->app->get('laravel-nova-menu');
+        $menu->setTreeUsing(function(Menu $menu, array $tree) {
+            // ... your actions on tree
+            return $tree;
+        });
+    }
+}
 ```
 
 ## Lint

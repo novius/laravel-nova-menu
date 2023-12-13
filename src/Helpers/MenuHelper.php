@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Novius\LaravelNovaMenu\Models\Menu;
 use Novius\LaravelNovaMenu\Models\MenuItem;
+use Novius\LaravelNovaMenu\Traits\Linkable;
 
 class MenuHelper
 {
@@ -21,20 +22,18 @@ class MenuHelper
         $links = [];
         $linkableObjects = config('laravel-nova-menu.linkable_objects', []);
         foreach ($linkableObjects as $class => $translation) {
-            $items = $class::linkableItems(trans($translation));
-            $links = array_merge($links, $items);
+            /** @var Linkable $class */
+            $links[] = $class::linkableItems(trans($translation));
         }
 
         $linkableRoutes = config('laravel-nova-menu.linkable_routes', []);
         foreach ($linkableRoutes as $routeName => $translation) {
             if (Route::has($routeName)) {
-                $links = array_merge(
-                    $links,
-                    static::linkableRoute($routeName, trans($translation))
-                );
+                $links[] = static::linkableRoute($routeName, trans($translation));
             }
         }
 
+        $links = array_merge(...$links);
         asort($links);
 
         return $links;
@@ -59,47 +58,52 @@ class MenuHelper
      *
      * You can append '|no-locale-fallback' to slug if you want to skip the default fallback
      */
-    public static function displayMenu(string $slug): string
+    public static function displayMenu(Menu|string $slug, string $view = null, bool $localeFallback = true): string
     {
-        $args = explode('|', $slug, 2);
-        $localeFallback = true;
-        if (isset($args[1]) && $args[1] === 'no-locale-fallback') {
-            $localeFallback = false;
+        if ($slug instanceof Menu) {
+            $menu = $slug;
+            $slug = $menu->slug;
+        } else {
+            $args = explode('|', $slug, 2);
+            if (isset($args[1]) && $args[1] === 'no-locale-fallback') {
+                $localeFallback = false;
+            }
+            $slug = $args[0];
+
+            $menu = Menu::query()
+                ->where('slug', $slug)
+                ->first();
         }
-        $slug = $args[0];
 
         $locale = app()->getLocale();
-        $menu = Menu::query()
-            ->where('slug', (string) $slug)
-            ->first();
 
         if ($localeFallback && ! empty($menu) && $menu->locale !== $locale) {
             if (empty($menu->locale_parent_id)) {
                 $menu = Menu::query()
                     ->where('locale_parent_id', $menu->id)
-                    ->where('locale', (string) $locale)
+                    ->where('locale', $locale)
                     ->first();
             } else {
                 $menu = Menu::query()
                     ->where(function ($query) use ($menu, $locale) {
                         $query->where('id', $menu->locale_parent_id)
-                            ->where('locale', (string) $locale);
+                            ->where('locale', $locale);
                     })
                     ->orWhere(function ($query) use ($menu, $locale) {
                         $query->where('locale_parent_id', $menu->locale_parent_id)
-                            ->where('locale', (string) $locale);
+                            ->where('locale', $locale);
                     })
                     ->first();
             }
         }
 
         if (empty($menu)) {
-            Log::info(sprintf('Menu with slug %s and locale %s not found : unable to display.', (string) $slug, app()->getLocale()));
+            Log::info(sprintf('Menu with slug %s and locale %s not found : unable to display.', $slug, app()->getLocale()));
 
             return '';
         }
 
-        $tree = Cache::rememberForever($menu->getTreeCacheName(), function () use ($menu) {
+        $tree = Cache::rememberForever($menu->getTreeCacheName(), static function () use ($menu) {
             $items = MenuItem::scoped(['menu_id' => $menu->id])
                 ->withDepth()
                 ->defaultOrder()
@@ -109,16 +113,16 @@ class MenuHelper
             return static::getTree($items);
         });
 
-        return (string) view('laravel-nova-menu::front/menu', [
+        return (string) view($view ?? 'laravel-nova-menu::front/menu', [
             'menu' => $menu,
-            'tree' => $tree,
+            'tree' => app()->get('laravel-nova-menu')->tree($menu, $tree),
         ]);
     }
 
     protected static function getTree(Collection $items): array
     {
         $tree = [];
-        foreach ($items as $key => $menuItem) {
+        foreach ($items as $menuItem) {
             $tree[] = [
                 'infos' => [
                     'name' => $menuItem->name,

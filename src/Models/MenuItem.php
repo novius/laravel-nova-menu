@@ -2,15 +2,38 @@
 
 namespace Novius\LaravelNovaMenu\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
 
 /**
- * Class MenuItem
+ * Novius\LaravelNovaMenu\Models\MenuItem
+ *
+ * @property int $id
+ * @property string $name
+ * @property int $menu_id
+ * @property ?int $parent_id
+ * @property int $left
+ * @property int $right
+ * @property string $external_link
+ * @property string internal_link
+ * @property string $html_classes
+ * @property string $html
+ * @property boolean $is_empty_link
+ * @property boolean $target_blank
+ * @property ?Carbon $created_at
+ * @property ?Carbon $updated_at
+ *
+ * @method static Builder|MenuItem newModelQuery()
+ * @method static Builder|MenuItem newQuery()
+ * @method static Builder|MenuItem query()
+ *
+ * @mixin \Eloquent
  */
 class MenuItem extends Model
 {
@@ -71,14 +94,15 @@ class MenuItem extends Model
         ];
     }
 
-    public function setParentIdAttribute($value)
+    public function setParentIdAttribute($value): void
     {
-        if (request()->has('viaResourceId')) {
+        $request = request();
+        if ($request && $request->has('viaResourceId')) {
             // Prevent bug with Laravel Nova because `menu_id` is not defined here
-            $this->menu_id = (int) request()->post('viaResourceId');
+            $this->menu_id = (int) $request->post('viaResourceId');
         }
 
-        return $this->nodeTraitSetParentIdAttribute($value);
+        $this->nodeTraitSetParentIdAttribute($value);
     }
 
     /**
@@ -108,8 +132,7 @@ class MenuItem extends Model
                 }
             } elseif (Str::startsWith($this->internal_link, 'linkable_object')) {
                 $className = $infos[1];
-                $id = $infos[2];
-                $item = $className::find($id);
+                $item = $className::find($infos[2]);
                 if (! empty($item->id)) {
                     $href = $item->linkableUrl();
                 }
