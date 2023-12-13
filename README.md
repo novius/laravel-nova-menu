@@ -53,6 +53,12 @@ You can display menu with :
 <x-menu slug="slug-of-menu" />
 ```
 
+You can also display menu by passing the model instance :
+
+```blade
+<x-menu :slug="Menu::find(1)" />
+```
+
 By default a fallback to app()->getLocale() is activated. 
 
 If you want force a specific slug with no fallback you can call :
