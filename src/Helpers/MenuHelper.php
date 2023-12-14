@@ -58,13 +58,13 @@ class MenuHelper
      *
      * You can append '|no-locale-fallback' to slug if you want to skip the default fallback
      */
-    public static function displayMenu(Menu|string $slug, string $view = null, bool $localeFallback = true): string
+    public static function displayMenu(Menu|string $slug_or_menu, string $view = null, bool $localeFallback = true): string
     {
-        if ($slug instanceof Menu) {
-            $menu = $slug;
+        if ($slug_or_menu instanceof Menu) {
+            $menu = $slug_or_menu;
             $slug = $menu->slug;
         } else {
-            $args = explode('|', $slug, 2);
+            $args = explode('|', $slug_or_menu, 2);
             if (isset($args[1]) && $args[1] === 'no-locale-fallback') {
                 $localeFallback = false;
             }

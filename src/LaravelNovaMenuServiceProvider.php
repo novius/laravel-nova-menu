@@ -35,10 +35,11 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
         $this->publishes([__DIR__.'/../lang' => lang_path('vendor/laravel-nova-menu')], 'lang');
 
         Blade::directive('menu', function (string $expression, string $view = null) {
+            trigger_error('Blade directive @menu is deprecated, use blade compoonent <x-laravel-nova-menu::menu /> instead', E_USER_DEPRECATED);
             return "<?php echo Novius\LaravelNovaMenu\Helpers\MenuHelper::displayMenu($expression, $view) ?>";
         });
 
-        Blade::component('menu', Menu::class);
+        Blade::componentNamespace('Novius\\LaravelNovaMenu\\View\\Components', 'laravel-nova-menu');
 
         foreach (config('laravel-nova-menu.observers', []) as $modelClass => $observerClass) {
             if (class_exists($modelClass) && class_exists($observerClass)) {

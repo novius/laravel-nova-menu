@@ -8,12 +8,12 @@ use Novius\LaravelNovaMenu\Models\Menu as MenuModel;
 
 class Menu extends Component
 {
-    public function __construct(public string|MenuModel $slug, public ?string $view = null, public bool $localeFallback = true)
+    public function __construct(public string|MenuModel $menu, public ?string $view = null, public bool $localeFallback = true)
     {
     }
 
     public function render()
     {
-        return MenuHelper::displayMenu($this->slug, $this->view, $this->localeFallback);
+        return MenuHelper::displayMenu($this->menu, $this->view, $this->localeFallback);
     }
 }
