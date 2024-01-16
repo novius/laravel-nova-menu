@@ -73,12 +73,6 @@ class Menu extends Resource
                 ->options(config('laravel-nova-menu.locales', ['en' => 'English']))
                 ->rules('in:'.implode(',', array_keys(config('laravel-nova-menu.locales', ['en' => 'English'])))),
 
-            Text::make(trans('laravel-nova-menu::menu.blade_directive'), function () {
-                return sprintf('<code class="p-2 bg-30 text-sm text-success">@menu("%s")</code>', $this->slug);
-            })
-                ->asHtml()
-                ->onlyOnIndex(),
-
             HasMany::make(trans('laravel-nova-menu::menu.menu_items'), 'items', MenuItem::class),
         ];
     }

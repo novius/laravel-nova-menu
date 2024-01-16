@@ -7,7 +7,6 @@ return [
     'menu_item' => 'Entrée menu',
     'menu_name' => 'Nom',
     'slug' => 'Slug',
-    'blade_directive' => 'Directive Blade',
     'parent_item' => 'Élément parent',
     'internal_link' => 'Lien interne',
     'external_link' => 'Lien externe',
