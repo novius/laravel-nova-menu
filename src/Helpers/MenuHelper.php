@@ -110,7 +110,7 @@ class MenuHelper
                 ->get()
                 ->toTree();
 
-            return static::getTree($items);
+            return app()->get('laravel-nova-menu')->buildTree($items);
         });
 
         return (string) view($view ?? 'laravel-nova-menu::front/menu', [
