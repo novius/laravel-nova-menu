@@ -172,6 +172,33 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
+### Customize tree building
+
+```php
+<?php
+
+namespace App\Providers;
+
+use Novius\LaravelNovaMenu\LaravelNovaMenuService;
+
+class AppServiceProvider extends ServiceProvider
+{
+     // ...
+     
+    public function boot()
+    {
+        /**
+         * @var LaravelNovaMenuService $menu
+         */
+        $menu = $this->app->get('laravel-nova-menu');
+        $menu->setBuildTreeUsing(function(Collection $items) {
+            // ... your actions to build tree as an array
+            return $tree;
+        });
+    }
+}
+```
+
 ## Lint
 
 Run php-cs with:

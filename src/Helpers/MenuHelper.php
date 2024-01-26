@@ -119,7 +119,7 @@ class MenuHelper
         ]);
     }
 
-    protected static function getTree(Collection $items): array
+    public static function getTree(Collection $items): array
     {
         $tree = [];
         foreach ($items as $menuItem) {
