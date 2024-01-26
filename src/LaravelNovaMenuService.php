@@ -19,7 +19,7 @@ class LaravelNovaMenuService
     /**
      * The callback that should be used to build tree
      *
-     * @var (Closure(Collection):array)|null
+     * @var (Closure(Menu):array)|null
      */
     protected ?Closure $buildTreeUsing = null;
 
@@ -39,7 +39,7 @@ class LaravelNovaMenuService
     /**
      *  Register callback that should be used to build tree
      *
-     * @param  Closure(Collection):array  $callback
+     * @param  Closure(Menu):array  $callback
      * @return $this
      */
     public function setBuildTreeUsing(Closure $callback): self
@@ -62,8 +62,8 @@ class LaravelNovaMenuService
     /**
      * Return the tree that will be passed to the view
      */
-    public function buildTree(Collection $items): array
+    public function buildTree(Menu $menu): array
     {
-        return ($this->buildTreeUsing ?: [MenuHelper::class, 'getTree'])($items);
+        return ($this->buildTreeUsing ?: [MenuHelper::class, 'buildTree'])($menu);
     }
 }

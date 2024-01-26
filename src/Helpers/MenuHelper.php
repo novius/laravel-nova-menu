@@ -104,13 +104,7 @@ class MenuHelper
         }
 
         $tree = Cache::rememberForever($menu->getTreeCacheName(), static function () use ($menu) {
-            $items = MenuItem::scoped(['menu_id' => $menu->id])
-                ->withDepth()
-                ->defaultOrder()
-                ->get()
-                ->toTree();
-
-            return app()->get('laravel-nova-menu')->buildTree($items);
+            return app()->get('laravel-nova-menu')->buildTree($menu);
         });
 
         return (string) view($view ?? 'laravel-nova-menu::front/menu', [
@@ -119,7 +113,18 @@ class MenuHelper
         ]);
     }
 
-    public static function getTree(Collection $items): array
+    public static function buildTree(Menu $menu): array
+    {
+        $items = MenuItem::scoped(['menu_id' => $menu->id])
+            ->withDepth()
+            ->defaultOrder()
+            ->get()
+            ->toTree();
+
+        return static::getTree($items);
+    }
+
+    protected static function getTree(Collection $items): array
     {
         $tree = [];
         foreach ($items as $menuItem) {
