@@ -5,60 +5,18 @@ namespace Novius\LaravelNovaMenu\Helpers;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
 use Novius\LaravelNovaMenu\Models\Menu;
 use Novius\LaravelNovaMenu\Models\MenuItem;
-use Novius\LaravelNovaMenu\Traits\Linkable;
 
 class MenuHelper
 {
-    /**
-     * Returns a sorted array of linkable items and routes.
-     * This collection is used in the back office to feed a select list.
-     * This select list is intended for adding new menu items.
-     */
-    public static function links(): array
-    {
-        $links = [];
-        $linkableObjects = config('laravel-nova-menu.linkable_objects', []);
-        foreach ($linkableObjects as $class => $translation) {
-            /** @var Linkable $class */
-            $links[] = $class::linkableItems(trans($translation));
-        }
-
-        $linkableRoutes = config('laravel-nova-menu.linkable_routes', []);
-        foreach ($linkableRoutes as $routeName => $translation) {
-            if (Route::has($routeName)) {
-                $links[] = static::linkableRoute($routeName, trans($translation));
-            }
-        }
-
-        $links = array_merge(...$links);
-        asort($links);
-
-        return $links;
-    }
-
-    /**
-     * Returns an array of well-formed linkable route.
-     * Check out the config file or the readme file to know more about linkable routes.
-     *
-     * @overridable
-     */
-    protected static function linkableRoute(string $routeName, string $translation): array
-    {
-        return [
-            'linkable_route:'.$routeName => $translation,
-        ];
-    }
-
     /**
      * Display menu from its slug
      * Fallback to menu with current application locale
      *
      * You can append '|no-locale-fallback' to slug if you want to skip the default fallback
      */
-    public static function displayMenu(Menu|string $slug_or_menu, string $view = null, bool $localeFallback = true): string
+    public static function displayMenu(Menu|string $slug_or_menu, ?string $view = null, bool $localeFallback = true): string
     {
         if ($slug_or_menu instanceof Menu) {
             $menu = $slug_or_menu;

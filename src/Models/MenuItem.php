@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
+use Novius\LaravelLinkable\Facades\Linkable;
 use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
 
 /**
@@ -125,18 +124,7 @@ class MenuItem extends Model
         }
 
         if (! empty($this->internal_link)) {
-            $infos = explode(':', $this->internal_link);
-            if (Str::startsWith($this->internal_link, 'linkable_route')) {
-                if (Route::has($infos[1])) {
-                    $href = route($infos[1]);
-                }
-            } elseif (Str::startsWith($this->internal_link, 'linkable_object')) {
-                $className = $infos[1];
-                $item = $className::find($infos[2]);
-                if (! empty($item->id)) {
-                    $href = $item->linkableUrl();
-                }
-            }
+            $href = Linkable::getLink($this->internal_link);
         }
 
         return $href;

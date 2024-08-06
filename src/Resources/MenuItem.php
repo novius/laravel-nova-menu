@@ -14,10 +14,11 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Novius\LaravelNovaMenu\Helpers\MenuHelper;
+use Novius\LaravelLinkable\Nova\Fields\Linkable;
 use Novius\LaravelNovaMenu\Lenses\MenuItems;
 use Novius\LaravelNovaOrderNestedsetField\OrderNestedsetField;
 
+/** @extends \Laravel\Nova\Resource */
 class MenuItem extends Resource
 {
     /**
@@ -143,9 +144,7 @@ class MenuItem extends Resource
                 return $this->linkTypeLabel();
             })->exceptOnForms(),
 
-            Select::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
-                ->searchable()
-                ->options(MenuHelper::links())
+            Linkable::make(trans('laravel-nova-menu::menu.internal_link'), 'internal_link')
                 ->hideFromIndex()
                 ->hideFromDetail()
                 ->dependsOn(

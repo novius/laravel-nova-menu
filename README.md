@@ -9,7 +9,7 @@ A Nova tool to manage menus.
 
 * PHP >= 8.1
 * Laravel Nova >= 4.0
-* Laravel Framework >= 9.0 | >= 10.0 | >= 11.0 
+* Laravel Framework >= 9.0 | >= 10.0 | >= 11.0 
 
 > **NOTE**: These instructions are for Laravel >= 9.0 and Laravel Nova 4.0. If you are using prior version, please
 > see the [previous version's docs](https://github.com/novius/laravel-nova-menu/tree/3-x).
@@ -83,67 +83,7 @@ php artisan vendor:publish --provider="Novius\LaravelNovaMenu\LaravelNovaMenuSer
 
 ### Manage internal link possibilities
 
-**linkable_objects**
-
-You can add dynamic routes to `linkable_objects` array (in configuration file).
-
-Example with `App\Models\Foo` Model.
-
-In this example we have a route defined as following :
-
-```php
-Route::get('foo/{slug}', 'FooController@show')->name('foo.show');
-```
-
-First, you have to add the Model to `laravel-nova-menu.php` config file.
-
-```php
-return [
-    'linkable_objects'=> [
-        App\Models\Foo:class => 'foo.label', // foo.label is a translation key
-    ],
-    ...
-];
-```
-
-Then, you have to implements `Linkable` trait to the model.
-
-```php
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-use Novius\LaravelNovaMenu\Traits\Linkable;
-
-class Foo extends Model
-{
-    use Linkable;
-
-    public function linkableUrl(): string
-    {
-        return route('foo.show', ['slug' => $this->slug]);
-    }
-
-    public function linkableTitle(): string
-    {
-        return $this->name;
-    }
-}
-```
-
-**linkable_routes**
-
-You can also add static routes to `linkable_routes` array (in configuration file).
-
-Example with a route with name `home`.
-
-```php
-return [
-    'linkable_objects'=> [
-        'contact' => 'contact.page', // contact.page is a translation key
-    ],
-    ...
-];
-```
+Laravel Nova Menu uses [Laravel Linkable](https://github.com/novius/laravel-linkable) to manage linkable routes and models. Please read the documentation.
 
 ### Customize tree passed to the view
 

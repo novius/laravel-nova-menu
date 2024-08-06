@@ -18,13 +18,13 @@
         "php": "^8.1",
         "laravel/nova": "^4.0",
         "illuminate/support": "^9.0 | ^10.0 | ^11.0",
+        "novius/laravel-linkable": "^1.0",
         "novius/laravel-nova-order-nestedset-field": "^4.0",
         "spatie/laravel-sluggable": "^3.4.0"
     },
     "require-dev": {
         "laravel/pint": "^1.7",
-        "orchestra/testbench": "^7.4.0",
-        "phpunit/phpunit": "^9.3.3"
+        "orchestra/testbench": "^9.2"
     },
     "autoload": {
         "psr-4": {
@@ -44,11 +44,11 @@
         }
     },
     "scripts": {
-        "fmt": [
+        "cs-fix": [
             "./vendor/bin/pint -v"
         ],
         "lint": [
-            "@composer fmt -- --test"
+            "@composer cs-fix -- --test"
         ],
         "test": "vendor/bin/phpunit --verbose --log-junit phpunit.log.xml"
     },
@@ -56,6 +56,10 @@
         {
             "type": "composer",
             "url": "https://nova.laravel.com"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:novius/laravel-linkable.git"
         }
     ],
     "config": {
