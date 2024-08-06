@@ -56,10 +56,6 @@
         {
             "type": "composer",
             "url": "https://nova.laravel.com"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:novius/laravel-linkable.git"
         }
     ],
     "config": {
