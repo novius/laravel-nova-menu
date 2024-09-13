@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Kalnoy\Nestedset\NodeTrait;
 use Novius\LaravelLinkable\Facades\Linkable;
-use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
 
 /**
  * Novius\LaravelNovaMenu\Models\MenuItem
@@ -23,8 +22,8 @@ use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
  * @property string internal_link
  * @property string $html_classes
  * @property string $html
- * @property boolean $is_empty_link
- * @property boolean $target_blank
+ * @property bool $is_empty_link
+ * @property bool $target_blank
  * @property ?Carbon $created_at
  * @property ?Carbon $updated_at
  *
@@ -36,10 +35,7 @@ use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
  */
 class MenuItem extends Model
 {
-    use NodeTrait {
-        setParentIdAttribute as public nodeTraitSetParentIdAttribute;
-    }
-    use Orderable;
+    use NodeTrait;
 
     public const TYPE_INTERNAL_LINK = 1;
 
@@ -51,13 +47,9 @@ class MenuItem extends Model
 
     protected $table = 'nova_menu_items';
 
-    protected $primaryKey = 'id';
-
     protected $guarded = [
         'id',
     ];
-
-    public $timestamps = true;
 
     protected $casts = [
         'target_blank' => 'boolean',
@@ -91,17 +83,6 @@ class MenuItem extends Model
         return [
             'menu_id',
         ];
-    }
-
-    public function setParentIdAttribute($value): void
-    {
-        $request = request();
-        if ($request && $request->has('viaResourceId')) {
-            // Prevent bug with Laravel Nova because `menu_id` is not defined here
-            $this->menu_id = (int) $request->post('viaResourceId');
-        }
-
-        $this->nodeTraitSetParentIdAttribute($value);
     }
 
     /**

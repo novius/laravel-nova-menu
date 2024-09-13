@@ -5,8 +5,6 @@ namespace Novius\LaravelNovaMenu;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Nova;
-use Novius\LaravelNovaMenu\View\Components\Menu;
-use Novius\LaravelVisualComposer\LaravelVisualComposer;
 
 class LaravelNovaMenuServiceProvider extends ServiceProvider
 {
@@ -34,8 +32,9 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom($packageDir.'/lang', 'laravel-nova-menu');
         $this->publishes([__DIR__.'/../lang' => lang_path('vendor/laravel-nova-menu')], 'lang');
 
-        Blade::directive('menu', function (string $expression, string $view = null) {
+        Blade::directive('menu', function (string $expression, ?string $view = null) {
             trigger_error('Blade directive @menu is deprecated, use blade compoonent <x-laravel-nova-menu::menu /> instead', E_USER_DEPRECATED);
+
             return "<?php echo Novius\LaravelNovaMenu\Helpers\MenuHelper::displayMenu($expression, $view) ?>";
         });
 
@@ -59,7 +58,7 @@ class LaravelNovaMenuServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(LaravelNovaMenuService::class, function () {
-            return new LaravelNovaMenuService();
+            return new LaravelNovaMenuService;
         });
 
         $this->app->alias(LaravelNovaMenuService::class, 'laravel-nova-menu');

@@ -4,7 +4,6 @@ namespace Novius\LaravelNovaMenu\Resources;
 
 use App\Nova\Resource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\Boolean;
@@ -16,7 +15,8 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Novius\LaravelLinkable\Nova\Fields\Linkable;
 use Novius\LaravelNovaMenu\Lenses\MenuItems;
-use Novius\LaravelNovaOrderNestedsetField\OrderNestedsetField;
+use Novius\LaravelNovaNestedset\Nova\Fields\SelectAppendTo;
+use Novius\LaravelNovaNestedset\Nova\Fields\TreeLines;
 
 /** @extends \Laravel\Nova\Resource */
 class MenuItem extends Resource
@@ -88,50 +88,21 @@ class MenuItem extends Resource
      *
      * @return array
      */
-    public function fields(Request $request)
+    public function fields(NovaRequest $request)
     {
         return [
             ID::make(),
 
-            Text::make(trans('laravel-nova-menu::menu.name'), function () {
-                $resource = $this->resource;
-                if (empty($resource->id)) {
-                    return '';
-                }
-
-                $depth = Cache::rememberForever(\Novius\LaravelNovaMenu\Models\MenuItem::getDepthCacheName($resource->id), function () use ($resource) {
-                    $result = \Novius\LaravelNovaMenu\Models\MenuItem::scoped([
-                        'menu_id' => $resource->menu_id,
-                    ])->withDepth()->find($resource->id);
-
-                    if (empty($result)) {
-                        return '';
-                    }
-
-                    return $result->depth;
-                });
-
-                $nbspStr = '';
-                for ($i = 0; $i < ($depth * 7); $i++) {
-                    $nbspStr .= '&nbsp;';
-                }
-
-                return $nbspStr.$this->name;
-            })->asHtml()
-                ->hideWhenCreating()
-                ->hideWhenUpdating()
-                ->hideFromDetail(),
+            TreeLines::make(trans('laravel-nova-menu::menu.order')),
 
             Text::make(trans('laravel-nova-menu::menu.name'), 'name')
-                ->hideFromIndex()
                 ->rules('required', 'max:191'),
 
-            Select::make(trans('laravel-nova-menu::menu.parent_item'), 'parent_id')
-                ->options($this->getParents($request))
-                ->displayUsingLabels()
-                ->hideWhenUpdating()
-                ->hideFromDetail()
-                ->hideFromIndex(),
+            SelectAppendTo::make(trans('laravel-nova-menu::menu.parent_item'))
+                ->treeScope(function () use ($request) {
+                    return ['menu_id' => $request->viaResourceId];
+                })
+                ->nodeTitle('name'),
 
             Select::make(trans('laravel-nova-menu::menu.link_type'), 'link_type')
                 ->options(\Novius\LaravelNovaMenu\Models\MenuItem::linkTypesLabels())
@@ -221,21 +192,7 @@ class MenuItem extends Resource
                         }
                     }
                 ),
-
-            OrderNestedsetField::make(trans('laravel-nova-menu::menu.order'), 'order'),
         ];
-    }
-
-    protected function getParents(NovaRequest $request)
-    {
-        $resource = $this->model();
-
-        $query = static::$model::select('name', 'id', 'menu_id', 'parent_id')
-            ->where('menu_id', $request->viaResourceId)
-            ->where('id', '<>', $resource->id)
-            ->ordered();
-
-        return $query->get()->pluck('name', 'id');
     }
 
     /**

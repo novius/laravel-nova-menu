@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Slug;
 use Laravel\Nova\Fields\Text;
 use Novius\LaravelNovaMenu\Actions\TranslateMenu;
 use Novius\LaravelNovaMenu\Filters\Locale;
+use Novius\LaravelNovaNestedset\Nova\Fields\TreeManager;
 
 class Menu extends Resource
 {
@@ -73,6 +74,12 @@ class Menu extends Resource
                 ->options(config('laravel-nova-menu.locales', ['en' => 'English']))
                 ->rules('in:'.implode(',', array_keys(config('laravel-nova-menu.locales', ['en' => 'English'])))),
 
+            TreeManager::make('Tree', \Novius\LaravelNovaMenu\Models\MenuItem::class)
+                ->treeScope(function (\Novius\LaravelNovaMenu\Models\Menu $resource) {
+                    return ['menu_id' => $resource->id];
+                })
+                ->nodeTitle('name'),
+
             HasMany::make(trans('laravel-nova-menu::menu.menu_items'), 'items', MenuItem::class),
         ];
     }
@@ -92,7 +99,7 @@ class Menu extends Resource
     {
         $locales = config('laravel-nova-menu.locales', ['en' => 'English']);
 
-        return (is_array($locales) && count($locales) > 1) ? [new Locale()] : [];
+        return (is_array($locales) && count($locales) > 1) ? [new Locale] : [];
     }
 
     /**
@@ -114,7 +121,7 @@ class Menu extends Resource
         }
 
         return [
-            (new TranslateMenu())->onlyInline(),
+            (new TranslateMenu)->onlyInline(),
         ];
     }
 }

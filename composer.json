@@ -19,7 +19,7 @@
         "laravel/nova": "^4.0",
         "illuminate/support": "^9.0 | ^10.0 | ^11.0",
         "novius/laravel-linkable": "^1.0",
-        "novius/laravel-nova-order-nestedset-field": "^4.0",
+        "novius/laravel-nova-nestedset": "dev-main",
         "spatie/laravel-sluggable": "^3.4.0"
     },
     "require-dev": {
@@ -56,6 +56,10 @@
         {
             "type": "composer",
             "url": "https://nova.laravel.com"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/novius/laravel-nova-nestedset"
         }
     ],
     "config": {
