@@ -78,8 +78,7 @@ class MenuHelper
 
     public static function buildTree(Menu $menu): array
     {
-        $items = MenuItem::query()
-            ->scoped(['menu_id' => $menu->id])
+        $items = MenuItem::scoped(['menu_id' => $menu->id])
             ->withDepth()
             ->defaultOrder()
             ->get()

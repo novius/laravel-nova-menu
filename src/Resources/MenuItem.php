@@ -92,10 +92,9 @@ class MenuItem extends Resource
                 }
 
                 $depth = Cache::rememberForever(MenuItemModel::getDepthCacheName($resource->id), static function () use ($resource) {
-                    $result = MenuItemModel::query()
-                        ->scoped([
-                            'menu_id' => $resource->menu_id,
-                        ])
+                    $result = MenuItemModel::scoped([
+                        'menu_id' => $resource->menu_id,
+                    ])
                         ->withDepth()
                         ->find($resource->id);
 
