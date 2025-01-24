@@ -4,6 +4,7 @@ namespace Novius\LaravelNovaMenu\Actions;
 
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Actions\ActionResponse;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
@@ -14,17 +15,15 @@ class TranslateMenu extends Action
 {
     /**
      * Perform the action on the given models.
-     *
-     * @return mixed
      */
-    public function handle(ActionFields $fields, Collection $models)
+    public function handle(ActionFields $fields, Collection $models): ActionResponse|Action
     {
         if ($models->count() > 1) {
             return Action::danger(trans('laravel-nova-menu::errors.action_only_available_for_single_menu'));
         }
 
         $menuToTranslate = $models->first();
-        $locale = $fields->locale;
+        $locale = $fields->get('locale');
         if ($menuToTranslate->locale === $locale) {
             return Action::danger(trans('laravel-nova-menu::errors.menu_already_translated'));
         }
@@ -45,8 +44,8 @@ class TranslateMenu extends Action
             return Action::danger(trans('laravel-nova-menu::errors.menu_already_translated'));
         }
 
-        $translatedMenu = new Menu();
-        $translatedMenu->name = $fields->name;
+        $translatedMenu = new Menu;
+        $translatedMenu->name = $fields->get('name');
         $translatedMenu->locale = $locale;
         $translatedMenu->locale_parent_id = $menuToTranslate->id;
 
@@ -59,10 +58,8 @@ class TranslateMenu extends Action
 
     /**
      * Get the fields available on the action.
-     *
-     * @return array
      */
-    public function fields(NovaRequest $request)
+    public function fields(NovaRequest $request): array
     {
         $locales = config('laravel-nova-menu.locales', ['en' => 'English']);
 

@@ -2,24 +2,25 @@
 
 namespace Novius\LaravelNovaMenu\Resources;
 
-use App\Nova\Resource;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Slug;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Resource;
 use Novius\LaravelNovaMenu\Actions\TranslateMenu;
 use Novius\LaravelNovaMenu\Filters\Locale;
+use Novius\LaravelNovaMenu\Models\Menu as MenuModel;
 
 class Menu extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var string
+     * @var class-string<MenuModel>
      */
-    public static $model = \Novius\LaravelNovaMenu\Models\Menu::class;
+    public static string $model = MenuModel::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -34,8 +35,6 @@ class Menu extends Resource
      * @var array
      */
     public static $search = ['name'];
-
-    public static $displayInNavigation = true;
 
     /**
      * Get the displayable label of the resource.
@@ -78,29 +77,13 @@ class Menu extends Resource
     }
 
     /**
-     * Get the cards available for the request.
-     */
-    public function cards(Request $request): array
-    {
-        return [];
-    }
-
-    /**
      * Get the filters available for the resource.
      */
     public function filters(Request $request): array
     {
         $locales = config('laravel-nova-menu.locales', ['en' => 'English']);
 
-        return (is_array($locales) && count($locales) > 1) ? [new Locale()] : [];
-    }
-
-    /**
-     * Get the lenses available for the resource.
-     */
-    public function lenses(Request $request): array
-    {
-        return [];
+        return (is_array($locales) && count($locales) > 1) ? [new Locale] : [];
     }
 
     /**
@@ -114,7 +97,7 @@ class Menu extends Resource
         }
 
         return [
-            (new TranslateMenu())->onlyInline(),
+            (new TranslateMenu)->onlyInline(),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Novius\LaravelNovaMenu\Lenses;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\LensRequest;
@@ -11,10 +12,8 @@ class MenuItems extends Lens
 {
     /**
      * Get the query builder / paginator for the lens.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
      */
-    public static function query(LensRequest $request, $query): mixed
+    public static function query(LensRequest $request, Builder $query): mixed
     {
         return $request->withOrdering($request->withFilters(
             $query
@@ -29,14 +28,6 @@ class MenuItems extends Lens
         return [
             ID::make('ID', 'id')->sortable(),
         ];
-    }
-
-    /**
-     * Get the filters available for the lens.
-     */
-    public function filters(Request $request): array
-    {
-        return [];
     }
 
     /**

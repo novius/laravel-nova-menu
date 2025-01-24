@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('nova_menus', function (Blueprint $table) {
+        Schema::create('nova_menus', static function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('slug')->unique();
@@ -25,7 +25,7 @@ return new class extends Migration
                 ->restrictOnDelete();
         });
 
-        Schema::create('nova_menu_items', function (Blueprint $table) {
+        Schema::create('nova_menu_items', static function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->integer('menu_id')->unsigned();

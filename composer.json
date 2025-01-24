@@ -16,15 +16,16 @@
     ],
     "require": {
         "php": "^8.1",
-        "laravel/nova": "^4.0",
-        "illuminate/support": "^9.0 | ^10.0 | ^11.0",
+        "laravel/nova": "^4.0|^5.0",
+        "illuminate/support": "^10.0 | ^11.0",
         "novius/laravel-linkable": "^1.0",
         "novius/laravel-nova-order-nestedset-field": "^4.0",
         "spatie/laravel-sluggable": "^3.4.0"
     },
     "require-dev": {
         "laravel/pint": "^1.7",
-        "orchestra/testbench": "^9.2"
+        "orchestra/testbench": "^9.2",
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -50,7 +51,8 @@
         "lint": [
             "@composer cs-fix -- --test"
         ],
-        "test": "vendor/bin/phpunit --verbose --log-junit phpunit.log.xml"
+        "test": "vendor/bin/phpunit --verbose --log-junit phpunit.log.xml",
+        "phpstan": "vendor/bin/phpstan analyse src tests --memory-limit 1G"
     },
     "repositories": [
         {

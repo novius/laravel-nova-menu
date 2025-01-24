@@ -2,6 +2,7 @@
 
 namespace Novius\LaravelNovaMenu\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,7 +33,7 @@ use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
  * @method static Builder|MenuItem newQuery()
  * @method static Builder|MenuItem query()
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class MenuItem extends Model
 {
@@ -51,13 +52,9 @@ class MenuItem extends Model
 
     protected $table = 'nova_menu_items';
 
-    protected $primaryKey = 'id';
-
     protected $guarded = [
         'id',
     ];
-
-    public $timestamps = true;
 
     protected $casts = [
         'target_blank' => 'boolean',

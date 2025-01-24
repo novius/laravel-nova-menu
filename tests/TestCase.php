@@ -2,13 +2,16 @@
 
 namespace Novius\LaravelNovaMenu\Tests;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Artisan;
 use Novius\LaravelNovaMenu\LaravelNovaMenuServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 abstract class TestCase extends Orchestra
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -16,10 +19,9 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return array
+     * @param  Application  $app
      */
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             LaravelNovaMenuServiceProvider::class,
@@ -27,18 +29,21 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('database.default', 'sqlite');
-        $app['config']->set('database.connections.sqlite', [
+        $app->get('config')->set('database.default', 'sqlite');
+        $app->get('config')->set('database.connections.sqlite', [
             'driver' => 'sqlite',
             'database' => ':memory:',
             'prefix' => '',
         ]);
 
-        $app['config']->set('sluggable', [
+        $app->get('config')->set('sluggable', [
             'onUpdate' => false,
             'separator' => '-',
             'method' => null,

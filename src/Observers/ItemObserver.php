@@ -4,15 +4,21 @@ namespace Novius\LaravelNovaMenu\Observers;
 
 use Illuminate\Support\Facades\Cache;
 use Novius\LaravelNovaMenu\Models\MenuItem;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class ItemObserver
 {
-    public function saving(MenuItem $item)
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function saving(MenuItem $item): void
     {
         $this->cleanModel($item);
     }
 
-    public function created(MenuItem $item)
+    public function created(MenuItem $item): void
     {
         Cache::forget($item->menu->getTreeCacheName());
         Cache::forget(MenuItem::getDepthCacheName($item->id));
@@ -22,7 +28,7 @@ class ItemObserver
         }
     }
 
-    public function updated(MenuItem $item)
+    public function updated(MenuItem $item): void
     {
         Cache::forget($item->menu->getTreeCacheName());
         Cache::forget(MenuItem::getDepthCacheName($item->id));
@@ -32,7 +38,7 @@ class ItemObserver
         }
     }
 
-    public function deleted(MenuItem $item)
+    public function deleted(MenuItem $item): void
     {
         Cache::forget($item->menu->getTreeCacheName());
         Cache::forget(MenuItem::getDepthCacheName($item->id));
@@ -42,7 +48,11 @@ class ItemObserver
         }
     }
 
-    protected function cleanModel(MenuItem $item)
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
+    protected function cleanModel(MenuItem $item): void
     {
         if (request()->has('link_type')) {
             // Prevent multi-types : keep only the value on submitted type

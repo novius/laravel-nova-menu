@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Novius\LaravelNovaMenu\Models\Menu;
 use Novius\LaravelNovaMenu\Models\MenuItem;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class MenuHelper
 {
@@ -15,6 +17,9 @@ class MenuHelper
      * Fallback to menu with current application locale
      *
      * You can append '|no-locale-fallback' to slug if you want to skip the default fallback
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public static function displayMenu(Menu|string $slug_or_menu, ?string $view = null, bool $localeFallback = true): string
     {
@@ -35,7 +40,7 @@ class MenuHelper
 
         $locale = app()->getLocale();
 
-        if ($localeFallback && ! empty($menu) && $menu->locale !== $locale) {
+        if ($localeFallback && $menu !== null && $menu->locale !== $locale) {
             if (empty($menu->locale_parent_id)) {
                 $menu = Menu::query()
                     ->where('locale_parent_id', $menu->id)
@@ -55,25 +60,26 @@ class MenuHelper
             }
         }
 
-        if (empty($menu)) {
+        if ($menu === null) {
             Log::info(sprintf('Menu with slug %s and locale %s not found : unable to display.', $slug, app()->getLocale()));
 
             return '';
         }
 
         $tree = Cache::rememberForever($menu->getTreeCacheName(), static function () use ($menu) {
-            return app()->get('laravel-nova-menu')->buildTree($menu);
+            return app()->get('laravel-nova-menu')?->buildTree($menu);
         });
 
         return (string) view($view ?? 'laravel-nova-menu::front/menu', [
             'menu' => $menu,
-            'tree' => app()->get('laravel-nova-menu')->tree($menu, $tree),
+            'tree' => app()->get('laravel-nova-menu')?->tree($menu, $tree),
         ]);
     }
 
     public static function buildTree(Menu $menu): array
     {
-        $items = MenuItem::scoped(['menu_id' => $menu->id])
+        $items = MenuItem::query()
+            ->scoped(['menu_id' => $menu->id])
             ->withDepth()
             ->defaultOrder()
             ->get()
@@ -85,6 +91,7 @@ class MenuHelper
     protected static function getTree(Collection $items): array
     {
         $tree = [];
+        /** @var MenuItem $menuItem */
         foreach ($items as $menuItem) {
             $tree[] = [
                 'infos' => [

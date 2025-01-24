@@ -3,7 +3,6 @@
 namespace Novius\LaravelNovaMenu;
 
 use Closure;
-use Illuminate\Support\Collection;
 use Novius\LaravelNovaMenu\Helpers\MenuHelper;
 use Novius\LaravelNovaMenu\Models\Menu;
 
@@ -54,7 +53,7 @@ class LaravelNovaMenuService
      */
     public function tree(Menu $menu, array $tree): array
     {
-        return ($this->treeUsing ?: function (Menu $menu, array $tree) {
+        return ($this->treeUsing ?: static function (Menu $menu, array $tree) {
             return $tree;
         })($menu, $tree);
     }

@@ -2,6 +2,7 @@
 
 namespace Novius\LaravelNovaMenu\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,19 +19,18 @@ use Spatie\Sluggable\SlugOptions;
  * @property ?int locale_parent_id
  * @property Carbon created_at
  * @property Carbon updated_at
+ *
  * @method static Builder|Menu newModelQuery()
  * @method static Builder|Menu newQuery()
  * @method static Builder|Menu query()
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Menu extends Model
 {
     use HasSlug;
 
     protected $table = 'nova_menus';
-
-    protected $primaryKey = 'id';
 
     protected $guarded = [
         'id',
@@ -40,8 +40,6 @@ class Menu extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    public $timestamps = true;
 
     public function items(): HasMany
     {

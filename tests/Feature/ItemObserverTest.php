@@ -5,12 +5,13 @@ namespace Novius\LaravelNovaMenu\Tests\Feature;
 use Novius\LaravelNovaMenu\Models\Menu;
 use Novius\LaravelNovaMenu\Models\MenuItem;
 use Novius\LaravelNovaMenu\Tests\TestCase;
+use RuntimeException;
 
 class ItemObserverTest extends TestCase
 {
     protected Menu $menu;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -18,14 +19,14 @@ class ItemObserverTest extends TestCase
     }
 
     /** @test */
-    public function createExternalLinkTest()
+    public function create_external_link_test(): void
     {
         request()->merge([
             'link_type' => MenuItem::TYPE_EXTERNAL_LINK,
         ]);
         $linkValue = 'https://www.novius.fr';
 
-        $link = new MenuItem();
+        $link = new MenuItem;
         $link->name = 'Test external';
         $link->menu_id = $this->menu->id;
         $link->external_link = $linkValue;
@@ -41,14 +42,14 @@ class ItemObserverTest extends TestCase
     }
 
     /** @test */
-    public function createInternalLinkTest()
+    public function create_internal_link_test(): void
     {
         request()->merge([
             'link_type' => MenuItem::TYPE_INTERNAL_LINK,
         ]);
         $linkValue = 'linkable_route:contact';
 
-        $link = new MenuItem();
+        $link = new MenuItem;
         $link->name = 'Test internal';
         $link->menu_id = $this->menu->id;
         $link->external_link = 'should_be_null_after_saved';
@@ -64,13 +65,13 @@ class ItemObserverTest extends TestCase
     }
 
     /** @test */
-    public function createEmptyLinkTest()
+    public function create_empty_link_test(): void
     {
         request()->merge([
             'link_type' => MenuItem::TYPE_EMPTY,
         ]);
 
-        $link = new MenuItem();
+        $link = new MenuItem;
         $link->name = 'Test empty link';
         $link->menu_id = $this->menu->id;
         $link->is_empty_link = 1;
@@ -86,7 +87,7 @@ class ItemObserverTest extends TestCase
     }
 
     /** @test */
-    public function createHtmlLinkTest()
+    public function create_html_link_test(): void
     {
         request()->merge([
             'link_type' => MenuItem::TYPE_HTML,
@@ -94,7 +95,7 @@ class ItemObserverTest extends TestCase
 
         $html = '<div>test</div>';
 
-        $link = new MenuItem();
+        $link = new MenuItem;
         $link->name = 'Test html link';
         $link->menu_id = $this->menu->id;
         $link->html = $html;
@@ -111,10 +112,10 @@ class ItemObserverTest extends TestCase
 
     protected function createMenu(): Menu
     {
-        $menu = new Menu();
+        $menu = new Menu;
         $menu->name = 'Test menu';
         if (! $menu->save()) {
-            throw new \Exception('Unable to save menu.');
+            throw new RuntimeException('Unable to save menu.');
         }
 
         return $menu;

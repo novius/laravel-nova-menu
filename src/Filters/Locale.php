@@ -2,7 +2,7 @@
 
 namespace Novius\LaravelNovaMenu\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Laravel\Nova\Filters\Filter;
@@ -21,11 +21,8 @@ class Locale extends Filter
 
     /**
      * Apply the filter to the given query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $value
      */
-    public function apply(Request $request, $query, $value): Builder
+    public function apply(Request $request, Builder $query, mixed $value): Builder
     {
         return $query->where('locale', $value);
     }
