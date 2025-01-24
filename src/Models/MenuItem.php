@@ -23,8 +23,8 @@ use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
  * @property string internal_link
  * @property string $html_classes
  * @property string $html
- * @property boolean $is_empty_link
- * @property boolean $target_blank
+ * @property bool $is_empty_link
+ * @property bool $target_blank
  * @property ?Carbon $created_at
  * @property ?Carbon $updated_at
  *
@@ -124,7 +124,7 @@ class MenuItem extends Model
         }
 
         if (! empty($this->internal_link)) {
-            $href = Linkable::getLink($this->internal_link);
+            $href = Linkable::getLink($this->internal_link) ?? $href;
         }
 
         return $href;
