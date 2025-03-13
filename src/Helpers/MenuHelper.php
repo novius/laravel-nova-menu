@@ -9,6 +9,7 @@ use Novius\LaravelNovaMenu\Models\Menu;
 use Novius\LaravelNovaMenu\Models\MenuItem;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 class MenuHelper
 {
@@ -20,6 +21,7 @@ class MenuHelper
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws Throwable
      */
     public static function displayMenu(Menu|string $slug_or_menu, ?string $view = null, bool $localeFallback = true): string
     {
@@ -40,6 +42,7 @@ class MenuHelper
 
         $locale = app()->getLocale();
 
+        /** @var Menu|null $menu */
         if ($localeFallback && $menu !== null && $menu->locale !== $locale) {
             if (empty($menu->locale_parent_id)) {
                 $menu = Menu::query()
@@ -70,14 +73,15 @@ class MenuHelper
             return app()->get('laravel-nova-menu')?->buildTree($menu);
         });
 
-        return (string) view($view ?? 'laravel-nova-menu::front/menu', [
+        return view($view ?? 'laravel-nova-menu::front/menu', [
             'menu' => $menu,
             'tree' => app()->get('laravel-nova-menu')?->tree($menu, $tree),
-        ]);
+        ])->render();
     }
 
     public static function buildTree(Menu $menu): array
     {
+        /** @phpstan-ignore method.notFound */
         $items = MenuItem::scoped(['menu_id' => $menu->id])
             ->withDepth()
             ->defaultOrder()

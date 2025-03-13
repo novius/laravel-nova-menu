@@ -22,6 +22,7 @@ class TranslateMenu extends Action
             return Action::danger(trans('laravel-nova-menu::errors.action_only_available_for_single_menu'));
         }
 
+        /** @var Menu $menuToTranslate */
         $menuToTranslate = $models->first();
         $locale = $fields->get('locale');
         if ($menuToTranslate->locale === $locale) {

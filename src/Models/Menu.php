@@ -2,7 +2,6 @@
 
 namespace Novius\LaravelNovaMenu\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,19 +11,20 @@ use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
 /**
- * @property int id
- * @property string name
- * @property string slug
- * @property ?string locale
- * @property ?int locale_parent_id
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property ?string $locale
+ * @property ?int $locale_parent_id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read Menu|null $parent
  *
- * @method static Builder|Menu newModelQuery()
- * @method static Builder|Menu newQuery()
- * @method static Builder|Menu query()
+ * @method static Builder<Menu> newModelQuery()
+ * @method static Builder<Menu> newQuery()
+ * @method static Builder<Menu> query()
  *
- * @mixin Eloquent
+ * @mixin Model
  */
 class Menu extends Model
 {

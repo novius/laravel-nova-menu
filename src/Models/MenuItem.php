@@ -2,8 +2,8 @@
 
 namespace Novius\LaravelNovaMenu\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -21,19 +21,24 @@ use Novius\LaravelNovaOrderNestedsetField\Traits\Orderable;
  * @property int $left
  * @property int $right
  * @property string $external_link
- * @property string internal_link
+ * @property string $internal_link
  * @property string $html_classes
  * @property string $html
  * @property bool $is_empty_link
  * @property bool $target_blank
  * @property ?Carbon $created_at
  * @property ?Carbon $updated_at
+ * @property-read int|null $depth
+ * @property-read Collection<MenuItem> $children
+ * @property-read Menu $menu
+ * @property-read MenuItem|null $parent
  *
- * @method static Builder|MenuItem newModelQuery()
- * @method static Builder|MenuItem newQuery()
- * @method static Builder|MenuItem query()
+ * @method static Builder<MenuItem> newModelQuery()
+ * @method static Builder<MenuItem> newQuery()
+ * @method static Builder<MenuItem> query()
+ * @method static Builder<MenuItem> ordered(string $direction = 'asc')
  *
- * @mixin Eloquent
+ * @mixin Model
  */
 class MenuItem extends Model
 {
@@ -93,7 +98,7 @@ class MenuItem extends Model
     public function setParentIdAttribute($value): void
     {
         $request = request();
-        if ($request && $request->has('viaResourceId')) {
+        if ($request->has('viaResourceId')) {
             // Prevent bug with Laravel Nova because `menu_id` is not defined here
             $this->menu_id = (int) $request->post('viaResourceId');
         }

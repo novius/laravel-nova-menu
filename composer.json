@@ -23,9 +23,9 @@
         "spatie/laravel-sluggable": "^3.4.0"
     },
     "require-dev": {
+        "larastan/larastan": "^3.0",
         "laravel/pint": "^1.7",
-        "orchestra/testbench": "^9.2",
-        "phpstan/phpstan": "^2.1"
+        "orchestra/testbench": "^9.2"
     },
     "autoload": {
         "psr-4": {
@@ -51,8 +51,12 @@
         "lint": [
             "@composer cs-fix -- --test"
         ],
-        "test": "vendor/bin/phpunit --verbose --log-junit phpunit.log.xml",
-        "phpstan": "vendor/bin/phpstan analyse src tests --memory-limit 1G"
+        "test": [
+            "vendor/bin/phpunit --verbose --log-junit phpunit.log.xml"
+        ],
+        "phpstan": [
+            "vendor/bin/phpstan analyse --memory-limit 1G"
+        ]
     },
     "repositories": [
         {

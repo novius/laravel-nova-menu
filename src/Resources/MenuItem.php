@@ -22,6 +22,9 @@ use Novius\LaravelNovaMenu\Lenses\MenuItems;
 use Novius\LaravelNovaMenu\Models\MenuItem as MenuItemModel;
 use Novius\LaravelNovaOrderNestedsetField\OrderNestedsetField;
 
+/**
+ * @extends Resource<MenuItemModel>
+ */
 class MenuItem extends Resource
 {
     /**
@@ -98,7 +101,7 @@ class MenuItem extends Resource
                         ->withDepth()
                         ->find($resource->id);
 
-                    return $result?->depth ?? '';
+                    return $result->depth ?? '';
                 });
 
                 $nbspStr = str_repeat('&nbsp;', ($depth * 7));
@@ -217,8 +220,9 @@ class MenuItem extends Resource
     {
         $resource = $this->model();
 
+        /** @phpstan-ignore method.notFound */
         $query = static::$model::query()
-            ->select('name', 'id', 'menu_id', 'parent_id')
+            ->select(['name', 'id', 'menu_id', 'parent_id'])
             ->where('menu_id', $request->viaResourceId)
             ->where('id', '<>', $resource?->id)
             ->ordered();
@@ -232,12 +236,12 @@ class MenuItem extends Resource
     protected function metasDefaultLinkType(): array
     {
         $resource = $this->model();
-        if (empty($resource?->id)) {
+        if ($resource?->id === null) {
             return [];
         }
 
         return [
-            'value' => $resource?->linkType(),
+            'value' => $resource->linkType(),
         ];
     }
 
@@ -247,16 +251,18 @@ class MenuItem extends Resource
     protected function linkTypeLabel(): string
     {
         $resource = $this->model();
-        if (empty($resource?->id)) {
+        if ($resource?->id === null) {
             return '';
         }
 
-        return MenuItemModel::linkTypesLabels()[$resource?->linkType()] ?? '';
+        return MenuItemModel::linkTypesLabels()[$resource->linkType()] ?? '';
     }
 
     protected static function applyOrderings(Builder $query, array $orderings): Builder
     {
-        return $query->orderBy('left');
+        $query->orderBy('left');
+
+        return $query;
     }
 
     /**
