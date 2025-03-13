@@ -45,7 +45,7 @@ jobs:
       matrix:
         operating-system: ['ubuntu-latest']
         php-versions: ['8.2', '8.3', '8.4']
-        laravel: [ 10.*, 11.*, 12.* ]
+        laravel: [ 11.*, 12.* ]
         dependency-version: [ prefer-stable ]
         include:
           - laravel: 12.*
@@ -54,11 +54,8 @@ jobs:
           - laravel: 11.*
             testbench: 9.*
             carbon: 2.*
-          - laravel: 10.*
-            testbench: 8.*
-            carbon: 2.*
 
-    name: phpstan - P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
+    name: phpstan - P${{ matrix.php-version }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
     steps:
       - uses: shivammathur/setup-php@v2
