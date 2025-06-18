@@ -123,7 +123,9 @@ class MenuItem extends Resource
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
-            Select::make(trans('laravel-nova-menu::menu.link_type'), 'link_type')
+            Select::make(trans('laravel-nova-menu::menu.link_type'), 'link_type', static function ($value, MenuItemModel $model) {
+                return $model->linkType();
+            })
                 ->options(MenuItemModel::linkTypesLabels())
                 ->withMeta($this->metasDefaultLinkType())
                 ->displayUsingLabels()
