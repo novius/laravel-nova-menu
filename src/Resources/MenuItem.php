@@ -23,7 +23,7 @@ use Novius\LaravelNovaMenu\Models\MenuItem as MenuItemModel;
 use Novius\LaravelNovaOrderNestedsetField\OrderNestedsetField;
 
 /**
- * @extends Resource<MenuItemModel>
+ * @extends resource<MenuItemModel>
  */
 class MenuItem extends Resource
 {
@@ -222,11 +222,11 @@ class MenuItem extends Resource
     {
         $resource = $this->model();
 
-        /** @phpstan-ignore method.notFound */
         $query = static::$model::query()
             ->select(['name', 'id', 'menu_id', 'parent_id'])
             ->where('menu_id', $request->viaResourceId)
             ->where('id', '<>', $resource?->id)
+            /** @phpstan-ignore method.notFound */
             ->ordered();
 
         return $query->get()->pluck('name', 'id');

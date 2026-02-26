@@ -81,11 +81,11 @@ class MenuHelper
 
     public static function buildTree(Menu $menu): array
     {
-        /** @phpstan-ignore method.notFound */
         $items = MenuItem::scoped(['menu_id' => $menu->id])
             ->withDepth()
             ->defaultOrder()
             ->get()
+            /** @phpstan-ignore method.notFound */
             ->toTree();
 
         return static::getTree($items);
