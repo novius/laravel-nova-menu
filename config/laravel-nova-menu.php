@@ -39,7 +39,7 @@ return [
      * Format : Model::class => Observer::class
      */
     'observers' => [
-        \Novius\LaravelNovaMenu\Models\MenuItem::class => ItemObserver::class,
+        Novius\LaravelNovaMenu\Models\MenuItem::class => ItemObserver::class,
     ],
 
 ];
