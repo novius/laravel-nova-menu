@@ -1,123 +1,103 @@
 <?php
 
-namespace Novius\LaravelNovaMenu\Tests\Feature;
-
 use Novius\LaravelNovaMenu\Models\Menu;
 use Novius\LaravelNovaMenu\Models\MenuItem;
-use Novius\LaravelNovaMenu\Tests\TestCase;
-use RuntimeException;
 
-class ItemObserverTest extends TestCase
+beforeEach(function () {
+    $this->menu = createMenu();
+});
+
+test('create external link test', function () {
+    request()->merge([
+        'link_type' => MenuItem::TYPE_EXTERNAL_LINK,
+    ]);
+    $linkValue = 'https://www.novius.fr';
+
+    $link = new MenuItem;
+    $link->name = 'Test external';
+    $link->menu_id = $this->menu->id;
+    $link->external_link = $linkValue;
+    $link->internal_link = 'should_be_null_after_saved';
+    $link->html = 'should_be_null_after_saved';
+    $link->is_empty_link = 1;
+    $link->save();
+
+    expect($link->internal_link)->toBeNull()
+        ->and($link->html)->toBeNull()
+        ->and($link->is_empty_link)->toBeFalse()
+        ->and($link->external_link)->toBe($linkValue);
+});
+
+test('create internal link test', function () {
+    request()->merge([
+        'link_type' => MenuItem::TYPE_INTERNAL_LINK,
+    ]);
+    $linkValue = 'linkable_route:contact';
+
+    $link = new MenuItem;
+    $link->name = 'Test internal';
+    $link->menu_id = $this->menu->id;
+    $link->external_link = 'should_be_null_after_saved';
+    $link->is_empty_link = true;
+    $link->html = 'should_be_null_after_saved';
+    $link->internal_link = $linkValue;
+    $link->save();
+
+    expect($link->external_link)->toBeNull()
+        ->and($link->html)->toBeNull()
+        ->and($link->is_empty_link)->toBeFalse()
+        ->and($link->internal_link)->toBe($linkValue);
+});
+
+test('create empty link test', function () {
+    request()->merge([
+        'link_type' => MenuItem::TYPE_EMPTY,
+    ]);
+
+    $link = new MenuItem;
+    $link->name = 'Test empty link';
+    $link->menu_id = $this->menu->id;
+    $link->is_empty_link = true;
+    $link->external_link = 'should_be_null_after_saved';
+    $link->html = 'should_be_null_after_saved';
+    $link->internal_link = 'should_be_null_after_saved';
+    $link->save();
+
+    expect($link->external_link)->toBeNull()
+        ->and($link->internal_link)->toBeNull()
+        ->and($link->html)->toBeNull()
+        ->and($link->is_empty_link)->toBeTrue();
+});
+
+test('create html link test', function () {
+    request()->merge([
+        'link_type' => MenuItem::TYPE_HTML,
+    ]);
+
+    $html = '<div>test</div>';
+
+    $link = new MenuItem;
+    $link->name = 'Test html link';
+    $link->menu_id = $this->menu->id;
+    $link->html = $html;
+    $link->is_empty_link = true;
+    $link->external_link = 'should_be_null_after_saved';
+    $link->internal_link = 'should_be_null_after_saved';
+    $link->save();
+
+    expect($link->external_link)->toBeNull()
+        ->and($link->internal_link)->toBeNull()
+        ->and($link->is_empty_link)->toBeFalse()
+        ->and($link->html)->toBe($html);
+});
+
+function createMenu(): Menu
 {
-    protected Menu $menu;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->menu = $this->createMenu();
+    $menu = new Menu;
+    $menu->name = 'Test menu';
+    if (!$menu->save()) {
+        throw new RuntimeException('Unable to save menu.');
     }
 
-    /** @test */
-    public function create_external_link_test(): void
-    {
-        request()->merge([
-            'link_type' => MenuItem::TYPE_EXTERNAL_LINK,
-        ]);
-        $linkValue = 'https://www.novius.fr';
-
-        $link = new MenuItem;
-        $link->name = 'Test external';
-        $link->menu_id = $this->menu->id;
-        $link->external_link = $linkValue;
-        $link->internal_link = 'should_be_null_after_saved';
-        $link->html = 'should_be_null_after_saved';
-        $link->is_empty_link = 1;
-        $link->save();
-
-        $this->assertNull($link->internal_link);
-        $this->assertNull($link->html);
-        $this->assertEquals(0, $link->is_empty_link);
-        $this->assertEquals($link->external_link, $linkValue);
-    }
-
-    /** @test */
-    public function create_internal_link_test(): void
-    {
-        request()->merge([
-            'link_type' => MenuItem::TYPE_INTERNAL_LINK,
-        ]);
-        $linkValue = 'linkable_route:contact';
-
-        $link = new MenuItem;
-        $link->name = 'Test internal';
-        $link->menu_id = $this->menu->id;
-        $link->external_link = 'should_be_null_after_saved';
-        $link->is_empty_link = 1;
-        $link->html = 'should_be_null_after_saved';
-        $link->internal_link = $linkValue;
-        $link->save();
-
-        $this->assertNull($link->external_link);
-        $this->assertNull($link->html);
-        $this->assertEquals(0, $link->is_empty_link);
-        $this->assertEquals($link->internal_link, $linkValue);
-    }
-
-    /** @test */
-    public function create_empty_link_test(): void
-    {
-        request()->merge([
-            'link_type' => MenuItem::TYPE_EMPTY,
-        ]);
-
-        $link = new MenuItem;
-        $link->name = 'Test empty link';
-        $link->menu_id = $this->menu->id;
-        $link->is_empty_link = 1;
-        $link->external_link = 'should_be_null_after_saved';
-        $link->html = 'should_be_null_after_saved';
-        $link->internal_link = 'should_be_null_after_saved';
-        $link->save();
-
-        $this->assertNull($link->external_link);
-        $this->assertNull($link->internal_link);
-        $this->assertNull($link->html);
-        $this->assertEquals(1, $link->is_empty_link);
-    }
-
-    /** @test */
-    public function create_html_link_test(): void
-    {
-        request()->merge([
-            'link_type' => MenuItem::TYPE_HTML,
-        ]);
-
-        $html = '<div>test</div>';
-
-        $link = new MenuItem;
-        $link->name = 'Test html link';
-        $link->menu_id = $this->menu->id;
-        $link->html = $html;
-        $link->is_empty_link = 1;
-        $link->external_link = 'should_be_null_after_saved';
-        $link->internal_link = 'should_be_null_after_saved';
-        $link->save();
-
-        $this->assertNull($link->external_link);
-        $this->assertNull($link->internal_link);
-        $this->assertEquals(0, $link->is_empty_link);
-        $this->assertEquals($link->html, $html);
-    }
-
-    protected function createMenu(): Menu
-    {
-        $menu = new Menu;
-        $menu->name = 'Test menu';
-        if (! $menu->save()) {
-            throw new RuntimeException('Unable to save menu.');
-        }
-
-        return $menu;
-    }
+    return $menu;
 }
