@@ -10,8 +10,8 @@ parameters:
     editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
     editorUrlTitle: '%%file%%:%%line%%'
 
+    reportUnmatchedIgnoredErrors: false
+
     ignoreErrors:
-#        - '#PHPDoc tag @var#'
-#
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
+        - '#toTree#'
+        - '#ordered#'
