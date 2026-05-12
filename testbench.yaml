@@ -1,7 +1,7 @@
 laravel: '@testbench'
 
 providers:
-  # - Workbench\App\Providers\WorkbenchServiceProvider
+  - Novius\LaravelNovaMenu\LaravelNovaMenuServiceProvider
 
 migrations:
   - workbench/database/migrations

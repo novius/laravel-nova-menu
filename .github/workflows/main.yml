@@ -93,7 +93,7 @@ jobs:
       - name: Install Dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:${{ matrix.carbon }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          composer install --no-ansi --no-interaction --no-scripts --prefer-dist
 
       - name: PHPStan Static Analysis
         run: composer run-script phpstan
@@ -154,7 +154,7 @@ jobs:
       - name: Install Dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:${{ matrix.carbon }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          composer install --no-ansi --no-interaction --no-scripts --prefer-dist
 
       - name: PHP test
         run: composer run-script test
