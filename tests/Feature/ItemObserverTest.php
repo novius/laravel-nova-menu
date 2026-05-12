@@ -95,7 +95,7 @@ function createMenu(): Menu
 {
     $menu = new Menu;
     $menu->name = 'Test menu';
-    if (!$menu->save()) {
+    if (! $menu->save()) {
         throw new RuntimeException('Unable to save menu.');
     }
 
