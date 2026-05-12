@@ -8,6 +8,7 @@ use Novius\LaravelNovaMenu\LaravelNovaMenuServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Spatie\Sluggable\SluggableServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
@@ -24,6 +25,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageProviders($app): array
     {
         return [
+            ...(class_exists('Spatie\Sluggable\SluggableServiceProvider') ? [SluggableServiceProvider::class] : []),
             LaravelNovaMenuServiceProvider::class,
         ];
     }
@@ -41,18 +43,6 @@ abstract class TestCase extends Orchestra
             'driver' => 'sqlite',
             'database' => ':memory:',
             'prefix' => '',
-        ]);
-
-        $app->get('config')->set('sluggable', [
-            'onUpdate' => false,
-            'separator' => '-',
-            'method' => null,
-            'maxLength' => null,
-            'maxLengthKeepWords' => true,
-            'slugEngineOptions' => [],
-            'reserved' => null,
-            'unique' => true,
-            'includeTrashed' => false,
         ]);
     }
 }

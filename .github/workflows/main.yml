@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: shivammathur/setup-php@v2
         with:
-          php-versions: '8.3'
+          php-version: '8.5'
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,21 +41,24 @@ jobs:
 
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        operating-system: ['ubuntu-latest']
-        php-versions: ['8.2', '8.3', '8.4']
-        laravel: [ 11.*, 12.* ]
-        dependency-version: [ prefer-stable ]
+        php-versions: ['8.2', '8.3', '8.4', '8.5']
+        laravel: [ 10.*, 11.*, 12.*, 13.* ]
         include:
-          - laravel: 12.*
-            testbench: 10.*
+          - laravel: 13.*
             carbon: 3.*
+            testbench: 11.*
+          - laravel: 12.*
+            carbon: 3.*
+            testbench: 10.*
           - laravel: 11.*
-            testbench: 9.*
             carbon: 2.*
+            testbench: 9.*
+        exclude:
+          - laravel: 13.*
+            php-versions: '8.2'
 
-    name: phpstan - P${{ matrix.php-version }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
+    name: phpstan - P${{ matrix.php-version }} - L${{ matrix.laravel }}
 
     steps:
       - uses: shivammathur/setup-php@v2
@@ -65,22 +68,87 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php-${{ matrix.php-versions }}-laravel-${{ matrix.laravel }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-versions }}-laravel-${{ matrix.laravel }}-
+            ${{ runner.os }}-php-${{ matrix.php-versions }}-
+
       - name: Login to Laravel Nova
         run: composer config http-basic.nova.laravel.com ${NOVA_USERNAME} ${NOVA_LICENSE_KEY}
         env:
           NOVA_USERNAME: ${{ secrets.NOVA_USERNAME }}
           NOVA_LICENSE_KEY: ${{ secrets.NOVA_LICENSE_KEY }}
 
+      - name: Install Dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:${{ matrix.carbon }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: PHPStan Static Analysis
+        run: composer run-script phpstan
+
+  test-app:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['8.2', '8.3', '8.4', '8.5']
+        laravel: [ 10.*, 11.*, 12.*, 13.* ]
+        include:
+          - laravel: 13.*
+            carbon: 3.*
+            testbench: 11.*
+          - laravel: 12.*
+            carbon: 3.*
+            testbench: 10.*
+          - laravel: 11.*
+            carbon: 2.*
+            testbench: 9.*
+        exclude:
+          - laravel: 13.*
+            php-versions: '8.2'
+
+    name: test - P${{ matrix.php-version }} - L${{ matrix.laravel }}
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
       - name: Cache composer dependencies
         uses: actions/cache@v3
         with:
-          path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php-${{ matrix.php-versions }}-laravel-${{ matrix.laravel }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-versions }}-laravel-${{ matrix.laravel }}-
+            ${{ runner.os }}-php-${{ matrix.php-versions }}-
+
+      - name: Login to Laravel Nova
+        run: composer config http-basic.nova.laravel.com ${NOVA_USERNAME} ${NOVA_LICENSE_KEY}
+        env:
+          NOVA_USERNAME: ${{ secrets.NOVA_USERNAME }}
+          NOVA_LICENSE_KEY: ${{ secrets.NOVA_LICENSE_KEY }}
 
       - name: Install Dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:${{ matrix.carbon }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: PHPStan Static Analysis
-        run: composer run-script phpstan
+      - name: PHP test
+        run: composer run-script test
