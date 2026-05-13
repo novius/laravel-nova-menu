@@ -44,6 +44,15 @@ jobs:
       matrix:
         php-versions: ['8.2', '8.3', '8.4', '8.5']
         laravel: [ 10.*, 11.*, 12.*, 13.* ]
+        include:
+          - laravel: 13.*
+            nestedset: 7.*
+          - laravel: 12.*
+            nestedset: 6.*
+          - laravel: 11.*
+            nestedset: 6.*
+          - laravel: 10.*
+            nestedset: 6.*
         exclude:
           - laravel: 13.*
             php-versions: '8.2'
@@ -81,7 +90,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "kalnoy/nestedset:${{ matrix.nestedset }}" --no-interaction --no-update
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: PHPStan Static Analysis
@@ -94,6 +103,15 @@ jobs:
       matrix:
         php-versions: ['8.2', '8.3', '8.4', '8.5']
         laravel: [ 10.*, 11.*, 12.*, 13.* ]
+        include:
+          - laravel: 13.*
+            nestedset: 7.*
+          - laravel: 12.*
+            nestedset: 6.*
+          - laravel: 11.*
+            nestedset: 6.*
+          - laravel: 10.*
+            nestedset: 6.*
         exclude:
           - laravel: 13.*
             php-versions: '8.2'
@@ -131,7 +149,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "kalnoy/nestedset:${{ matrix.nestedset }}" --no-interaction --no-update
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: PHP test
